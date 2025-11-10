@@ -1,0 +1,256 @@
+/* ======= HERO ======= */
+.hero {
+  width: 100%;
+  min-height: 50vh;
+  background: url('/assets/foto-local.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-size: clamp(1rem, 4vw, 1.6rem);
+      font-weight: 400;
+    }
+  }
+}
+
+/* ======= QUIÉNES SOMOS ======= */
+.quienes {
+  background: #ffffff;
+  padding: 80px 20px;
+  text-align: center;
+  border-bottom: 2px solid #e7e1da;
+
+  h2 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    margin-bottom: 1rem;
+    color: #3b2b24;
+  }
+
+  p {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    line-height: 1.6;
+    max-width: 800px;
+    margin: auto;
+    color: #333;
+  }
+}
+
+/* ======= SECCIONES DE SERVICIO ======= */
+
+/* Base general */
+.servicio {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+/* Imagen de fondo */
+.servicio-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.55);
+  z-index: 0;
+  transition: transform 0.8s ease, filter 0.4s ease;
+}
+
+/* Efecto hover */
+.servicio:hover .servicio-bg {
+  transform: scale(1.05);
+  filter: brightness(0.65);
+}
+
+/* Contenido sobre la imagen */
+.servicio-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  padding: 2rem 1rem;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  animation: fadeIn 1s ease both;
+
+  h3 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: clamp(1rem, 4vw, 1.1rem);
+    line-height: 1.5;
+  }
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======= VARIANTES ======= */
+
+/* “Diseño de muebles a medida” */
+.servicio.destacado .servicio-bg {
+  background-image: url('/assets/escritorio1.png');
+}
+
+/* “Construcción de cocinas personalizadas” */
+.servicio.destacado.cocina .servicio-bg {
+  background-image: url('/assets/cocina2.png');
+}
+
+/* “Proyectos personalizados y trabajos especiales” */
+.servicio.destacado.alt .servicio-bg {
+  background-image: url('/assets/piscina2.png');
+}
+
+/* ======= SECCIÓN UBICACIÓN ======= */
+.ubicacion {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(180deg, #f2ede9 0%, #e7dfd8 100%);
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  text-align: center;
+  overflow: hidden;
+  border-radius: 0;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 0;
+
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInSection 0.9s ease forwards;
+  animation-delay: 0.3s;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    //background: url("/assets/pattern-light.png") repeat;
+    opacity: 0.08;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .ubicacion-texto {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 800;
+    color: #3b2b24;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: clamp(1rem, 4vw, 1.1rem);
+    line-height: 1.7;
+    color: #2e2e2e;
+
+    a {
+      color: #6c4d3e;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.25s ease;
+
+      &:hover {
+        color: #9b6c52;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  iframe {
+    width: 100%;
+    max-width: 700px;
+    height: 350px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+  }
+
+  @media (min-width: 900px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    padding: 100px 10vw;
+    gap: 60px;
+
+    .ubicacion-texto {
+      flex: 1;
+      padding-right: 50px;
+    }
+
+    .ubicacion-mapa {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+/* Animación general */
+@keyframes fadeInSection {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======= PLACEHOLDER SERVICIOS ======= */
+.servicios-preview {
+  padding: 3rem 1rem;
+  text-align: center;
+  opacity: 0.6;
+  font-size: clamp(1rem, 4vw, 1.2rem);
+}

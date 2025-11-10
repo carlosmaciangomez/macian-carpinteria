@@ -1,0 +1,7 @@
+# Ignorar dependencias y builds
+/node_modules
+/dist
+/.angular/cache
+
+# Archivos de entorno
+.env

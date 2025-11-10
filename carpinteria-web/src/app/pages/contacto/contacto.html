@@ -1,0 +1,48 @@
+<section class="contacto">
+    <div class="contacto-container">
+        <h2>Coméntanos cualquier duda o presupuesto</h2>
+
+        <form id="mensajeForm" (submit)="sendEmail($event)" novalidate>
+            <div class="form-group">
+                <label for="nombreContacto">Nombre completo:</label>
+                <input type="text" id="nombreContacto" name="nombreContacto" placeholder="Ej: Fernando Martínez" />
+            </div>
+
+            <div class="form-group">
+                <label for="correoContacto">Correo de contacto:</label>
+                <input type="email" id="correoContacto" name="correoContacto" placeholder="ejemplo@correo.com" />
+            </div>
+
+            <div class="form-group">
+                <label for="asuntoMensaje">Asunto:</label>
+                <input type="text" id="asuntoMensaje" name="asuntoMensaje" placeholder="Asunto del mensaje" />
+            </div>
+
+            <div class="form-group">
+                <label for="textoMensaje">Descripción del mensaje:</label>
+                <textarea id="textoMensaje" name="textoMensaje" rows="5"
+                    placeholder="Escribe aquí tu mensaje..."></textarea>
+            </div>
+
+
+            <div id="recaptcha-container"></div>
+
+            <button type="submit" [disabled]="loading">
+                {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
+            </button>
+
+            @if (fieldError) {
+            <p class="error">{{ fieldError }}</p>
+            }
+            @if (captchaError) {
+            <p class="error">⚠️ Por favor, marca la casilla "No soy un robot".</p>
+            }
+            @if (success) {
+            <p class="success">✅ Mensaje enviado correctamente.</p>
+            }
+            @if (error) {
+            <p class="error">❌ Error al enviar el mensaje. Inténtalo de nuevo.</p>
+            }
+        </form>
+    </div>
+</section>

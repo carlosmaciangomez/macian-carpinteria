@@ -1,0 +1,23 @@
+<nav class="topbar">
+  <img src="assets/logo.png" alt="Logo" class="logo" [class.big]="menuOpen">
+
+  <button class="burger" (click)="toggleMenu()" [class.open]="menuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Menú debajo del navbar -->
+<div class="push-menu" [class.open]="menuOpen">
+  <div class="menu-inner">
+    <ul>
+      <li><a routerLink="/" (click)="closeMenu()">Inicio</a></li>
+      <li><a routerLink="/servicios" (click)="closeMenu()">Servicios</a></li>
+      <li><a routerLink="/galeria" (click)="closeMenu()">Galería</a></li>
+      <li><a routerLink="/resenas" (click)="closeMenu()">Reseñas</a></li>
+      <li><a routerLink="/contacto" (click)="closeMenu()">Contacto</a></li>
+      <li><a routerLink="/admin/login" (click)="closeMenu()">Admin</a></li>
+    </ul>
+  </div>
+</div>

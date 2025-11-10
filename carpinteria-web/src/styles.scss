@@ -1,0 +1,95 @@
+:root {
+  --navbar-height: 70px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&display=swap');
+
+/* ======= RESETEO GENERAL ======= */
+* {
+  margin: 0;
+  box-sizing: border-box;
+  object-fit: cover;
+  font-family: "Lexend", sans-serif;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* ======= ANIMACIÓN DE ENTRADA INICIAL ======= */
+body {
+  margin: 0;
+  padding-top: 79px;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: dropIn 0.8s ease-out forwards;
+}
+
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======= FOOTER ======= */
+footer {
+  background-color: #6c4d3e;
+  color: white;
+  position: relative;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+footer section {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 20px;
+  border-left: 2px solid white;
+  width: fit-content;
+}
+
+footer section h3 {
+  font-size: 30px;
+}
+
+footer section article {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 22px;
+}
+
+footer section article img,
+footer section article a img {
+  width: 32px;
+  height: 32px;
+}
+
+footer section article a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  gap: 20px;
+}
+
+footer hr {
+  width: 95%;
+  margin: 10px auto;
+  border-color: white;
+}
+
+footer div {
+  font-size: 15px;
+}

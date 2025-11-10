@@ -1,0 +1,49 @@
+<section class="resenas">
+    <h2>Opiniones de nuestros clientes</h2>
+
+    @if (cargando) {
+    <div class="mensaje">Cargando reseñas...</div>
+    }
+
+    @if (error) {
+    <div class="mensaje error">Error al cargar reseñas 😢</div>
+    }
+
+    @if (!cargando && !error) {
+    <div class="resenas-grid">
+        @for (r of resenas; track r) {
+        <a class="tarjeta"
+            href="https://www.google.com/maps/place/Maci%C3%A1n+Carpinteria/@39.8481375,-0.4890027,17z/data=!4m8!3m7!1s0xd607b029466c465:0xe54f5e7d208b8aee!8m2!3d39.8481375!4d-0.4890027!9m1!1b1!16s%2Fg%2F11rr0_kzxx"
+            target="_blank" rel="noopener noreferrer">
+            <div class="usuario">
+                <img [src]="r.profile_photo_url?.startsWith('http') ? r.profile_photo_url : 'https://via.placeholder.com/50'"
+                    alt="Foto de {{ r.author_name }}" referrerpolicy="no-referrer" />
+                <div>
+                    <h3>{{ r.author_name }}</h3>
+                    <p class="fecha">{{ r.relative_time_description }}</p>
+                </div>
+            </div>
+
+            <div class="estrellas">
+                @for (s of [1, 2, 3, 4, 5]; track s) {
+                <span [class.activa]="s <= r.rating">★</span>
+                }
+            </div>
+
+            <p class="texto">{{ r.text }}</p>
+
+            @if (r.photo_url) {
+            <div class="foto-resena">
+                <img [src]="r.photo_url" alt="Foto de la reseña" loading="lazy" />
+            </div>
+            }
+        </a>
+        }
+    </div>
+
+    <div class="publicar">
+        <a href="https://www.google.com/maps/place/Maci%C3%A1n+Carpinteria/@39.8481375,-0.4890027,17z/data=!4m8!3m7!1s0xd607b029466c465:0xe54f5e7d208b8aee!8m2!3d39.8481375!4d-0.4890027!9m1!1b1!16s%2Fg%2F11rr0_kzxx?entry=ttu"
+            target="_blank" class="boton-resena">📝 Publica una reseña</a>
+    </div>
+    }
+</section>

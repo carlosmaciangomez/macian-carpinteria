@@ -1,0 +1,12 @@
+# Node
+node_modules/
+.env
+npm-debug.log
+
+# Angular
+dist/
+.angular/cache/
+
+# VS Code
+.vscode/
+.DS_Store
