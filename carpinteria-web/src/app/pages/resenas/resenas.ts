@@ -19,7 +19,7 @@ export class ResenasComponent {
 
   async cargarResenas() {
     try {
-      const res = await fetch('http://localhost:3000/api/reviews');
+      const res = await fetch('https://carpinteria-backend.onrender.com/api/reviews');
       const data = await res.json();
 
       if (Array.isArray(data)) {
