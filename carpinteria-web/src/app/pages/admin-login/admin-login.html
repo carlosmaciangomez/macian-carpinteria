@@ -1,7 +1,32 @@
-<section class="en-construccion">
-    <div class="contenedor">
-        <img src="assets/building.png" alt="Página en construcción" />
-        <h2>Estamos trabajando en esta sección</h2>
-        <p>Pronto estará disponible. ¡Gracias por tu paciencia!</p>
-    </div>
-</section>
+<div class="admin-login">
+    <section class="login-card">
+        <h2>Zona restringida</h2>
+        <p class="aviso">
+            Acceso exclusivo para administradores. Introduce tus credenciales.
+        </p>
+
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <input id="username" name="username" type="text" [(ngModel)]="username" autocomplete="username"
+                    required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input id="password" name="password" type="password" [(ngModel)]="password"
+                    autocomplete="current-password" required />
+            </div>
+
+            <button type="submit" [disabled]="loading">
+                {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+            </button>
+
+            @if (errorMsg) {
+            <p class="error">
+                {{ errorMsg }}
+            </p>
+            }
+        </form>
+    </section>
+</div>

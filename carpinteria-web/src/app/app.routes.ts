@@ -1,19 +1,27 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
 import { Servicios } from './pages/servicios/servicios';
-import { Galeria } from './pages/galeria/galeria';
 import { ResenasComponent } from './pages/resenas/resenas';
 import { ContactoComponent } from './pages/contacto/contacto';
-import { AdminLogin } from './pages/admin-login/admin-login';
-import { AdminPanel } from './pages/admin-panel/admin-panel';
+import { AdminLoginComponent } from './pages/admin-login/admin-login';
+import { AdminPanelComponent } from './pages/admin-panel/admin-panel';
+
+import { ProyectosComponent } from './pages/proyectos/proyectos';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: Home },
+  { path: '', component: Home, pathMatch: 'full' },
   { path: 'servicios', component: Servicios },
-  { path: 'galeria', component: Galeria },
+  { path: 'proyectos', component: ProyectosComponent },
   { path: 'resenas', component: ResenasComponent },
   { path: 'contacto', component: ContactoComponent },
-  { path: 'admin/login', component: AdminLogin },
-  { path: 'admin', component: AdminPanel },
+
+  { path: 'admin', redirectTo: 'admin-login', pathMatch: 'full' },
+  { path: 'admin-login', component: AdminLoginComponent },
+  { path: 'admin-panel', component: AdminPanelComponent, canActivate: [authGuard] },
+
+  // si alguien entra a /galeria viejo, lo mandamos a proyectos
+  { path: 'galeria', redirectTo: 'proyectos', pathMatch: 'full' },
+
   { path: '**', redirectTo: '' }
 ];

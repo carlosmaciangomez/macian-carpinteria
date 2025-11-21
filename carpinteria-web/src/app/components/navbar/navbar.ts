@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +10,8 @@ import { RouterLink } from '@angular/router';
 })
 export class Navbar {
   menuOpen = false;
+
+  constructor(private router: Router) { }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -24,5 +26,21 @@ export class Navbar {
 
   closeMenu() {
     this.menuOpen = false;
+  }
+
+  /** ✔ Saber si el admin está logueado */
+  isLoggedIn(): boolean {
+    return localStorage.getItem('adminLogged') === 'true';
+  }
+
+  /** ✔ Navegar correctamente según si está logueado o no */
+  goAdmin() {
+    this.closeMenu();
+
+    if (this.isLoggedIn()) {
+      this.router.navigate(['/admin-panel']);
+    } else {
+      this.router.navigate(['/admin-login']);
+    }
   }
 }

@@ -1,29 +1,135 @@
-.en-construccion {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh;
-    background-color: #f2f2f2;
+.admin-login {
+    min-height: calc(100vh - 80px); // altura total menos navbar aprox
+    display: flex; // ponemos flex para centrar
+    justify-content: center; // centrado horizontal
+    align-items: center; // centrado vertical
+    padding: 40px 20px; // aire alrededor en pantallas pequeñas
+    background: radial-gradient(1200px circle at top, #faf7f4 0%, #f5f3f1 55%, #efe9e4 100%);
+}
 
-    .contenedor {
-        text-align: center;
+.login-card {
+    width: 100%; // ocupa todo el ancho disponible
+    max-width: 420px; // límite cómodo para login
+    background: #ffffff; // tarjeta blanca
+    border-radius: 16px; // bordes más suaves
+    padding: 30px 24px; // un poco más de “margen interno”
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.06); // sombra doble más natural
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.04); // borde sutil para definición
 
-        img {
-            max-width: 350px;
-            width: 80%;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    h2 {
+        margin-bottom: 8px; // separación con el texto de abajo
+        font-size: 1.7rem; // título un pelín más grande
+        font-weight: 800; // más presencia
+        color: #3b2b24; // marrón oscuro madera
+        letter-spacing: 0.2px; // micro detalle para elegancia
+    }
+
+    .aviso {
+        font-size: 0.98rem; // texto informativo cómodo
+        color: #6b5b52; // gris cálido
+        margin-bottom: 20px; // aire antes del form
+        line-height: 1.35; // mejor lectura
+    }
+
+    .form-group {
+        margin-bottom: 14px; // separación entre campos
+
+        label {
+            display: block; // label en línea propia
+            font-weight: 700; // más claro qué es cada campo
+            margin-bottom: 6px; // separación label-input
+            color: #443a35; // marrón apagado
+            font-size: 0.95rem;
         }
+
+        input {
+            width: 100%;
+            padding: 10px 12px; // inputs más cómodos
+            border-radius: 8px; // coherente con card
+            border: 1px solid #cfc7c2; // borde suave
+            font-size: 0.98rem;
+            box-sizing: border-box;
+            background: #fbfbfb; // leve contraste
+            transition: // animaciones suaves
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+
+            &:focus {
+                outline: none;
+                border-color: #6c4d3e;
+                background: #ffffff;
+                box-shadow: 0 0 0 3px rgba(108, 77, 62, 0.18);
+            }
+
+            &:invalid.ng-touched {
+                border-color: #c0392b; // rojo si está tocado e inválido
+                box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+            }
+        }
+    }
+
+    button {
+        width: 100%;
+        background-color: #6c4d3e;
+        color: #fff;
+        padding: 11px 0;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.02rem;
+        font-weight: 800;
+        cursor: pointer;
+        margin-top: 8px;
+        transition:
+            background-color 0.2s ease,
+            transform 0.08s ease,
+            box-shadow 0.2s ease;
+
+        &:hover:not(:disabled) {
+            background-color: #8b5a3a;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(108, 77, 62, 0.28);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px rgba(108, 77, 62, 0.25);
+        }
+
+        &:disabled {
+            background-color: #b7a8a0;
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+    }
+
+    .error {
+        margin-top: 12px;
+        color: #c0392b;
+        font-weight: 700;
+        font-size: 0.92rem;
+        background: rgba(192, 57, 43, 0.08); // cajita suave
+        padding: 8px 10px;
+        border-radius: 8px;
+    }
+
+    .hint {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        color: #777;
+    }
+}
+
+/* Responsive extra (móviles pequeños) */
+@media (max-width: 360px) {
+    .login-card {
+        padding: 24px 18px;
 
         h2 {
-            font-size: 1.8rem;
-            color: #4a2e1a;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #555;
-            font-size: 1rem;
+            font-size: 1.45rem;
         }
     }
 }
