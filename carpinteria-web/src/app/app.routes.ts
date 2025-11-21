@@ -12,7 +12,7 @@ import { authGuard } from './guards/auth.guard';
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
   { path: 'servicios', component: Servicios },
-  { path: 'proyectos', component: ProyectosComponent },
+  { path: 'proyectos', component: ProyectosComponent, canActivate: [authGuard] },
   { path: 'resenas', component: ResenasComponent },
   { path: 'contacto', component: ContactoComponent },
 

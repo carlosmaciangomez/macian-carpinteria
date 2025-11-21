@@ -5,6 +5,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&display=swap');
 
 /* ======= RESETEO GENERAL ======= */
+.app-layout {
+  min-height: 100vh;      // ocupa toda la pantalla
+  display: flex;
+  flex-direction: column; // en columna
+}
+
+.app-main {
+  flex: 1;                // esto es lo clave: rellena el hueco
+}
+
 * {
   margin: 0;
   box-sizing: border-box;

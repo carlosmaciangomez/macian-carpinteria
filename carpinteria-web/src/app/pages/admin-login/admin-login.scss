@@ -1,5 +1,5 @@
 .admin-login {
-    min-height: calc(100vh - 80px); // altura total menos navbar aprox
+    height: fit-content;
     display: flex; // ponemos flex para centrar
     justify-content: center; // centrado horizontal
     align-items: center; // centrado vertical

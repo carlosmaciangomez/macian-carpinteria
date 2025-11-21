@@ -1,5 +1,50 @@
 <div class="proyectos-page">
-    <h1>Proyectos</h1>
-    <p>Aquí verás todos los trabajos publicados por la empresa.</p>
+
+    <header class="header">
+        <h1>Proyectos</h1>
+        <p>Nuestros trabajos realizados. Filtra por tipo si quieres ver algo concreto.</p>
+    </header>
+
+    <!-- Filtros fijos arriba -->
+    <div class="filtros-wrapper">
+        <div class="filtros">
+            <button (click)="setTipo(null)" [class.filtro-activo]="!tipoActivo">
+                Todos
+            </button>
+
+            @for (tipo of tipos; track $index) {
+            <button (click)="setTipo(tipo)" [class.filtro-activo]="tipoActivo === tipo">
+                {{ tipo | titlecase }}
+            </button>
+            }
+        </div>
+    </div>
+
+    <!-- Lista (en móvil: columna) -->
+    <section class="grid">
+        @for (p of proyectosFiltrados; track $index) {
+        <article class="card">
+
+            @if (portadaEsVideo(p)) {
+            <video class="portada" [src]="getPortada(p)" muted controls></video>
+            } @else {
+            <img class="portada" [src]="getPortada(p)" alt="Proyecto" />
+            }
+
+            <div class="card-body">
+                <h3>{{ p.titulo }}</h3>
+                <p>{{ p.descripcion }}</p>
+
+                <div class="meta">
+                    <span class="tipo">{{ p.tipo | titlecase }}</span>
+                    <span class="fecha">{{ p.fecha | date:'shortDate' }}</span>
+                </div>
+            </div>
+
+        </article>
+        } @empty {
+        <p class="empty">No hay proyectos de este tipo todavía.</p>
+        }
+    </section>
 
 </div>
