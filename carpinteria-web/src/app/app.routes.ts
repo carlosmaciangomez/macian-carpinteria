@@ -20,7 +20,6 @@ export const routes: Routes = [
   { path: 'admin-login', component: AdminLoginComponent },
   { path: 'admin-panel', component: AdminPanelComponent, canActivate: [authGuard] },
 
-  // si alguien entra a /galeria viejo, lo mandamos a proyectos
   { path: 'galeria', redirectTo: 'proyectos', pathMatch: 'full' },
 
   { path: '**', redirectTo: '' }
