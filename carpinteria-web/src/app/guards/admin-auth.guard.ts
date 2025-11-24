@@ -3,17 +3,15 @@ import { CanActivateFn, Router } from '@angular/router';
 import { map, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = () => {
+export const adminAuthGuard: CanActivateFn = () => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    // Espera a que Firebase diga si hay usuario (aunque sea tras F5)
     return authService.user$.pipe(
         take(1),
         map(user => {
             if (user) return true;
-
-            router.navigate(['/admin-login']);
+            router.navigateByUrl('/admin-login');
             return false;
         })
     );

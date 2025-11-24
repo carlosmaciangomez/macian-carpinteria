@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AdminUsersService } from '../../services/admin-users.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -11,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './admin-login.html',
   styleUrls: ['./admin-login.scss']
 })
-export class AdminLoginComponent implements OnInit {
+export class AdminLoginComponent {
   username = '';
   password = '';
   loading = false;
@@ -19,17 +20,16 @@ export class AdminLoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private adminUsers: AdminUsersService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
-
-  ngOnInit() {
-    if (this.authService.isLoggedIn()) {
+  ) {
+    if (this.authService.isLoggedInSync()) {
       this.router.navigateByUrl('/admin-panel');
     }
   }
 
-  onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm) {
     this.errorMsg = '';
 
     if (form.invalid) {
@@ -39,7 +39,16 @@ export class AdminLoginComponent implements OnInit {
 
     this.loading = true;
 
-    const ok = this.authService.login(this.username, this.password);
+    const emailRaw = await this.adminUsers.getEmailByUsername(this.username);
+    const email = (emailRaw ?? '').trim();
+
+    if (!email) {
+      this.loading = false;
+      this.errorMsg = 'Usuario incorrecto.';
+      return;
+    }
+
+    const ok = await this.authService.login(email, this.password);
 
     this.loading = false;
 

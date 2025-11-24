@@ -1,26 +1,39 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import {
+    Auth,
+    authState,
+    signInWithEmailAndPassword,
+    signOut,
+    User
+} from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-    private readonly STORAGE_KEY = 'admin_logged_in';
 
-    login(username: string, password: string): boolean {
-        const ok = username === 'test' && password === 'test';
+    private auth = inject(Auth);
 
-        if (ok) {
-            localStorage.setItem(this.STORAGE_KEY, 'true');
+    // Observable con el usuario actual (Firebase lo emite al cargar y en cambios)
+    user$: Observable<User | null> = authState(this.auth);
+
+    // Login con email + password (ya te llega el email desde AdminUsersService)
+    async login(email: string, password: string): Promise<boolean> {
+        try {
+            await signInWithEmailAndPassword(this.auth, email, password);
+            return true;
+        } catch (err) {
+            console.error('Firebase login error:', err);
+            return false;
         }
-
-        return ok;
     }
 
-    isLoggedIn(): boolean {
-        return localStorage.getItem(this.STORAGE_KEY) === 'true';
+    // ✅ Logout (esto es lo que te faltaba)
+    async logout(): Promise<void> {
+        await signOut(this.auth);
     }
 
-    logout(): void {
-        localStorage.removeItem(this.STORAGE_KEY);
+    // Para checks rápidos en componentes (sync)
+    isLoggedInSync(): boolean {
+        return !!this.auth.currentUser;
     }
 }
