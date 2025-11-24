@@ -1,12 +1,17 @@
-<section class="admin-panel">
-    <header class="admin-header">
-        <h2>Panel de administración</h2>
+<div class="admin-panel">
+    <h1>Panel de administración</h1>
 
-        <button (click)="logout()" class="logout">Cerrar sesión</button>
-    </header>
+    <div class="admin-actions">
+        <button class="btn btn-primary" routerLink="/admin-proyectos">
+            Ver proyectos
+        </button>
 
-    <div class="admin-content">
-        <p>Zona restringida para administradores.</p>
-        <p>Aquí más adelante pondremos la gestión de reseñas, contenido, etc.</p>
+        <button class="btn btn-outline" routerLink="/admin-proyectos/nuevo">
+            + Crear proyecto
+        </button>
+
+        <button class="btn btn-danger" (click)="logout()">
+            Cerrar sesión
+        </button>
     </div>
-</section>
+</div>
