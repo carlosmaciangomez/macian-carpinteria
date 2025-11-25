@@ -32,18 +32,19 @@
             }
 
             <div class="card-body">
-                <h3>{{ p.titulo }}</h3>
-                <p>{{ p.descripcion }}</p>
-
+                <h3>{{ p.title }}</h3>
+                <p>{{ p.description }}</p>
                 <div class="meta">
-                    <span class="tipo">{{ p.tipo | titlecase }}</span>
-                    <span class="fecha">{{ p.fecha | date:'shortDate' }}</span>
+                    <span class="tipo">{{ p.tags[0] | titlecase }}</span>
+                    <span class="fecha">
+                        {{ p.createdAt?.toDate() | date:'shortDate' }}
+                    </span>
                 </div>
             </div>
 
         </article>
         } @empty {
-        <p class="empty">No hay proyectos de este tipo todavía.</p>
+        <p class="empty">No hay proyectos publicados todavía.</p>
         }
     </section>
 

@@ -1,0 +1,95 @@
+@if (loading) {
+<div>Cargando proyecto...</div>
+} @else {
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2>{{ id ? 'Editar proyecto' : 'Nuevo proyecto' }}</h2>
+
+    <label>
+        Título *
+        <input formControlName="title" (blur)="onTitleBlur()" />
+    </label>
+
+    @if (form.controls.title.touched && form.controls.title.invalid) {
+    <div class="error">
+        El título es obligatorio.
+    </div>
+    }
+
+    <label>
+        Slug *
+        <input formControlName="slug" />
+    </label>
+
+    <label>
+        Descripción *
+        <textarea formControlName="description" rows="6"></textarea>
+    </label>
+
+    <label>
+        Tags (separadas por coma)
+        <input formControlName="tags" placeholder="cocinas, armarios, ..." />
+    </label>
+
+    <label class="published">
+        Publicado
+        <input type="checkbox" formControlName="published" />
+    </label>
+
+    <hr />
+
+    <h3>Portada</h3>
+    <input type="file" accept="image/*" (change)="onPickCover($event)" />
+
+    @if (form.value.coverUrl) {
+    <img [src]="form.value.coverUrl" class="cover" />
+    }
+
+    <hr />
+
+    <h3>Fotos</h3>
+    <input type="file" accept="image/*" multiple (change)="onPickMedia($event, 'image')" />
+
+    <h3>Vídeos</h3>
+    <input type="file" accept="video/*" multiple (change)="onPickMedia($event, 'video')" />
+
+    @if (uploadQueue.length) {
+    <div class="uploads">
+        <h4>Subiendo...</h4>
+
+        @for (u of uploadQueue; track $index) {
+        <div>
+            {{ u.name }} — {{ u.progress | number:'1.0-0' }}%
+        </div>
+        }
+    </div>
+    }
+
+    @if (mediaFA.length) {
+    <div class="media-grid">
+        @for (c of mediaFA.controls; track $index) {
+        <div class="media-item">
+            @switch (c.value.type) {
+            @case ('image') {
+            <img [src]="c.value.url" />
+            }
+            @case ('video') {
+            <video [src]="c.value.url" controls></video>
+            }
+            }
+
+            <button type="button" class="btn-danger" (click)="removeMedia($index)">
+                Quitar
+            </button>
+        </div>
+        }
+    </div>
+    }
+
+    <hr />
+
+    <button type="submit" [disabled]="saving">
+        {{ id ? 'Guardar cambios' : 'Crear proyecto' }}
+    </button>
+    <a routerLink="/admin-proyectos" class="btn-secondary">Cancelar</a>
+</form>
+}

@@ -1,0 +1,43 @@
+<div class="admin-header">
+    <h2>Proyectos</h2>
+    <a routerLink="/admin-proyectos/nuevo" class="btn">+ Nuevo proyecto</a>
+</div>
+
+@if (projects$ | async; as projects) {
+<ul class="projects-list">
+    @for (p of projects; track p.id) {
+    <li class="project-row">
+        <div class="left">
+            @if (p.coverUrl) {
+            <img [src]="p.coverUrl" class="thumb" />
+            }
+
+            <div>
+                <div class="title">{{ p.title }}</div>
+                <div class="meta">
+                    @if (p.published === false) {
+                    <span class="draft">BORRADOR</span>
+                    }
+                    @if (p.tags.length) {
+                    <span>· {{ p.tags.join(', ') }}</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a [routerLink]="['/admin-proyectos/editar', p.id]" class="btn-secondary">Editar</a>
+            <button class="btn-danger" (click)="deleteProject(p)" [disabled]="deletingId === p.id">
+                {{ deletingId === p.id ? 'Borrando...' : 'Borrar' }}
+            </button>
+        </div>
+    </li>
+    } @empty {
+    <li class="project-row">
+        <p>No hay proyectos todavía.</p>
+    </li>
+    }
+</ul>
+} @else {
+<p>Cargando proyectos...</p>
+}

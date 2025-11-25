@@ -8,9 +8,8 @@ import { AdminPanelComponent } from './pages/admin-panel/admin-panel';
 
 import { ProyectosComponent } from './pages/proyectos/proyectos';
 
-import { AdminProyectosComponent } from './pages/admin-proyectos/admin-proyectos';
-import { AdminProyectoFormComponent } from './pages/admin-proyecto-form/admin-proyecto-form';
-
+import { AdminProjectsListComponent } from './pages/admin-proyectos/admin-projects-list.component';
+import { AdminProjectFormComponent } from './pages/admin-proyecto-form/admin-project-form.component';
 
 import { authGuard } from './guards/auth.guard';
 
@@ -27,9 +26,9 @@ export const routes: Routes = [
   { path: 'admin-login', component: AdminLoginComponent },
   { path: 'admin-panel', component: AdminPanelComponent, canActivate: [authGuard] },
 
-  { path: 'admin-proyectos', component: AdminProyectosComponent, canActivate: [authGuard] },
-  { path: 'admin-proyectos/nuevo', component: AdminProyectoFormComponent, canActivate: [authGuard] },
-  { path: 'admin-proyectos/editar/:id', component: AdminProyectoFormComponent, canActivate: [authGuard] },
+  { path: 'admin-proyectos', component: AdminProjectsListComponent, canActivate: [authGuard] },
+  { path: 'admin-proyectos/nuevo', component: AdminProjectFormComponent, canActivate: [authGuard] },
+  { path: 'admin-proyectos/editar/:id', component: AdminProjectFormComponent, canActivate: [authGuard] },
 
   { path: 'galeria', redirectTo: 'proyectos', pathMatch: 'full' },
 
