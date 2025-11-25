@@ -18,8 +18,9 @@
                     @if (p.published === false) {
                     <span class="draft">BORRADOR</span>
                     }
-                    @if (p.tags.length) {
-                    <span>· {{ p.tags.join(', ') }}</span>
+
+                    @if (p.tags?.length) {
+                    <span>· {{ (p.tags || []).join(', ') }}</span>
                     }
                 </div>
             </div>

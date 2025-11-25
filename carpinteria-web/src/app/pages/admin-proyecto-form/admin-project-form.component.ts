@@ -1,223 +1,282 @@
-import { Component, inject } from '@angular/core';
+// src/app/admin/admin-project-form/admin-project-form.component.ts
+
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     FormBuilder,
+    FormGroup,
+    FormArray,
     ReactiveFormsModule,
     Validators,
-    FormArray
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectsService } from '../../services/projects.service';
+import { Project } from '../../models/project.model';
+
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { StorageService } from '../../services/storage.service';
-import { ProjectMedia } from '../../models/project.model';
-import { take } from 'rxjs/operators';
+
+interface UploadItem {
+    name: string;
+    progress: number;
+}
+
+interface Category {
+    id: string;
+    name: string;
+}
 
 @Component({
-    standalone: true,
     selector: 'app-admin-project-form',
+    standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './admin-project-form.component.html',
-    styleUrls: ['./admin-proyecto-form.scss']
+    styleUrls: ['./admin-proyecto-form.scss'],
 })
-export class AdminProjectFormComponent {
-    private fb = inject(FormBuilder);
-    private route = inject(ActivatedRoute);
-    private router = inject(Router);
-    private projectsSvc = inject(ProjectsService);
-    private storageSvc = inject(StorageService);
+export class AdminProjectFormComponent implements OnInit {
+    form!: FormGroup;
 
     id: string | null = null;
-    loading = false;
-    saving = false;
+    project: Project | null = null;
 
-    // 🔹 nuevo: indica si el doc YA existe en Firestore
-    isExisting = false;
+    loading = false; // usado en la plantilla: @if (loading)
+    saving = false;  // usado en [disabled]="saving"
 
-    uploadQueue: Array<{ progress: number; name: string }> = [];
+    uploadQueue: UploadItem[] = []; // usado en la plantilla: uploadQueue.length
 
-    form = this.fb.nonNullable.group({
-        title: ['', Validators.required],
-        slug: ['', Validators.required],
-        description: ['', Validators.required],
+    // 🔹 categorías que usaremos en el <select>
+    categorias$!: Observable<Category[]>;
 
-        tags: this.fb.nonNullable.control<string>(''),
-        published: this.fb.nonNullable.control(true),
+    constructor(
+        private fb: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private projectsSvc: ProjectsService,
+        private firestore: Firestore,
+        private storageSvc: StorageService
+    ) { }
 
-        coverUrl: this.fb.control<string | null>(null),
-        media: this.fb.nonNullable.array<ProjectMedia>([])
-    });
+    ngOnInit(): void {
+        this.id = this.route.snapshot.paramMap.get('id');
 
-    get mediaFA() {
+        // 🔹 formulario: usamos "category" en vez de "tags"
+        this.form = this.fb.group({
+            title: ['', [Validators.required]],
+            slug: ['', [Validators.required]],
+            description: ['', [Validators.required]],
+            category: [''],           // una sola categoría
+            published: [false],
+            coverUrl: [''],
+            // si usas coverPath en el modelo, puedes añadirlo:
+            // coverPath: [''],
+            media: this.fb.array([]), // array de { type, url, path? }
+        });
+
+        // 🔹 cargamos categorías desde la colección "categories"
+        const colRef = collection(this.firestore, 'categories');
+        this.categorias$ = collectionData(colRef, {
+            idField: 'id',
+        }) as Observable<Category[]>;
+
+        // 🔹 si estamos editando un proyecto existente
+        if (this.id) {
+            this.loading = true;
+            this.projectsSvc.getProjects$().subscribe({
+                next: (projects) => {
+                    const found = projects.find((p) => p.id === this.id);
+                    if (!found) {
+                        this.loading = false;
+                        return;
+                    }
+
+                    this.project = found;
+
+                    // rellenamos media
+                    const mediaFA = this.mediaFA;
+                    mediaFA.clear();
+                    (found.media || []).forEach((m: any) => {
+                        mediaFA.push(
+                            this.fb.group({
+                                type: [m.type],
+                                url: [m.url],
+                                path: [m.path || null],
+                            })
+                        );
+                    });
+
+                    this.form.patchValue({
+                        title: found.title ?? '',
+                        slug: found.slug ?? '',
+                        description: found.description ?? '',
+                        // si no tiene category pero sí tags, usamos el primer tag
+                        category: (found as any).category || found.tags?.[0] || '',
+                        published: !!found.published,
+                        coverUrl: found.coverUrl ?? '',
+                        // coverPath: (found as any).coverPath || '',
+                    });
+
+                    this.loading = false;
+                },
+                error: () => {
+                    this.loading = false;
+                },
+            });
+        }
+    }
+
+    // 👉 getter usado en la plantilla: mediaFA.length, mediaFA.controls
+    get mediaFA(): FormArray {
         return this.form.get('media') as FormArray;
     }
 
-    // genera ID sin librerías
-    private newId(): string {
-        return crypto.randomUUID();
+    // 👉 llamado desde (blur)="onTitleBlur()"
+    onTitleBlur(): void {
+        const titleCtrl = this.form.get('title');
+        const slugCtrl = this.form.get('slug');
+        if (!titleCtrl || !slugCtrl) return;
+
+        const title = titleCtrl.value || '';
+        const slugCurrent = slugCtrl.value || '';
+
+        // si el slug está vacío o es igual al anterior auto-generado, lo regeneramos
+        if (!slugCurrent || slugCurrent === this.slugify(title)) {
+            slugCtrl.setValue(this.slugify(title));
+        }
     }
 
-    ngOnInit() {
-        this.route.paramMap.pipe(take(1)).subscribe(pm => {
-            const id = pm.get('id');
-            if (!id) return;
-
-            this.id = id;
-            this.isExisting = true; // 🔹 estamos editando uno que ya existe
-            this.loading = true;
-
-            this.projectsSvc.getProject$(id).pipe(take(1)).subscribe(p => {
-                this.form.patchValue({
-                    title: p.title,
-                    slug: p.slug,
-                    description: p.description,
-                    tags: (p.tags || []).join(', '),
-                    published: p.published,
-                    coverUrl: p.coverUrl || null
-                });
-
-                this.mediaFA.clear();
-                for (const m of (p.media || [])) {
-                    this.mediaFA.push(this.fb.control(m));
-                }
-
-                this.loading = false;
-            });
-        });
-    }
-
-    // autogenera slug si no hay
-    onTitleBlur() {
-        if (this.form.value.slug) return;
-        const title = this.form.value.title || '';
-        const slug = title
+    private slugify(text: string): string {
+        return text
+            .toString()
             .toLowerCase()
-            .trim()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/\s+/g, '-');
-        this.form.patchValue({ slug });
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
     }
 
-    async onPickCover(ev: Event) {
-        const input = ev.target as HTMLInputElement;
-        if (!input.files?.length) return;
-        const file = input.files[0];
-
-        // si no hay id aún, generamos uno para usar en Storage
-        const projectId = this.id ?? this.newId();
-        if (!this.id) this.id = projectId;
-
-        const path = `projects/${projectId}/cover/${Date.now()}_${file.name}`;
-
-        this.uploadQueue.push({ progress: 0, name: file.name });
-        const idx = this.uploadQueue.length - 1;
-
-        this.storageSvc.uploadFile(path, file).subscribe({
-            next: r => {
-                this.uploadQueue[idx].progress = r.progress;
-                if (r.url) this.form.patchValue({ coverUrl: r.url });
-            },
-            error: e => alert('Error subiendo portada: ' + e.message)
-        });
-    }
-
-    async onPickMedia(ev: Event, type: 'image' | 'video') {
-        const input = ev.target as HTMLInputElement;
-        if (!input.files?.length) return;
-
-        // igual que arriba: generamos id para Storage si hace falta
-        const projectId = this.id ?? this.newId();
-        if (!this.id) this.id = projectId;
-
-        const files = Array.from(input.files);
-
-        for (const file of files) {
-            const path = `projects/${projectId}/media/${Date.now()}_${file.name}`;
-
-            this.uploadQueue.push({ progress: 0, name: file.name });
-            const idx = this.uploadQueue.length - 1;
-
-            this.storageSvc.uploadFile(path, file).subscribe({
-                next: r => {
-                    this.uploadQueue[idx].progress = r.progress;
-
-                    if (r.url) {
-                        const media: ProjectMedia = {
-                            type,
-                            url: r.url,
-                            path: r.path,
-                            order: this.mediaFA.length
-                        };
-                        this.mediaFA.push(this.fb.control(media));
-                    }
-                },
-                error: e => alert('Error subiendo archivo: ' + e.message)
-            });
-        }
-    }
-
-    removeMedia(i: number) {
-        const m = this.mediaFA.at(i).value as ProjectMedia;
-        const ok = confirm('¿Eliminar este archivo?');
-        if (!ok) return;
-
-        if (m?.path) {
-            this.storageSvc.deleteFile(m.path).catch(() => { });
-        }
-
-        this.mediaFA.removeAt(i);
-
-        // reordenar order
-        this.mediaFA.controls.forEach((c, idx) => {
-            const v = c.value;
-            c.setValue({ ...v, order: idx });
-        });
-    }
-
-    async save() {
+    // 👉 llamado desde (ngSubmit)="save()"
+    async save(): Promise<void> {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
 
         this.saving = true;
+
+        const v = this.form.value as any;
+
+        const mediaArray =
+            this.mediaFA.controls.map((c: any) => ({
+                type: c.value.type,
+                url: c.value.url,
+                path: c.value.path || null,
+            })) || [];
+
+        const project: Project = {
+            id: this.id || undefined,
+            title: v.title ?? '',
+            slug: v.slug ?? '',
+            description: v.description ?? '',
+            // 🔹 una sola categoría
+            category: v.category || null,
+            published: !!v.published,
+            coverUrl: v.coverUrl ?? '',
+            // coverPath: v.coverPath || null,
+            media: mediaArray,
+            // si ya existía, mantenemos la fecha; si no, nueva
+            createdAt: this.project?.createdAt ?? new Date(),
+        };
+
         try {
-            // si no hay id todavía (caso sin imágenes), generamos una
-            const projectId = this.id ?? this.newId();
-            if (!this.id) this.id = projectId;
-
-            const raw = this.form.getRawValue();
-
-            const tags = (raw.tags || '')
-                .split(',')
-                .map(t => t.trim())
-                .filter(Boolean);
-
-            const payload = {
-                title: raw.title,
-                slug: raw.slug,
-                description: raw.description,
-                tags,
-                coverUrl: raw.coverUrl ?? null,
-                media: (raw.media || []) as ProjectMedia[],
-                published: raw.published
-            };
-
-            if (!this.isExisting) {
-                // 🔹 primera vez: CREAR documento
-                await this.projectsSvc.createProject(projectId, payload as any);
-                this.isExisting = true;
-            } else {
-                // 🔹 ya existe: actualizar
-                await this.projectsSvc.updateProject(projectId, payload as any);
-            }
-
-            this.router.navigate(['/admin-proyectos']);
+            await this.projectsSvc.save(project);
+            await this.router.navigate(['/admin-proyectos']);
+        } catch (err) {
+            console.error('Error guardando proyecto', err);
         } finally {
             this.saving = false;
         }
     }
 
-    async onSubmit() {
-        await this.save();
+    // 👉 llamado desde (change)="onPickCover($event)"
+    //    Sube a Firebase Storage y actualiza coverUrl con la URL real
+    onPickCover(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (!file) return;
+
+        const queueItem: UploadItem = { name: file.name, progress: 0 };
+        this.uploadQueue.push(queueItem);
+
+        const projectId = this.id ?? 'tmp';
+        const storagePath = `projects/${projectId}/cover-${Date.now()}-${file.name}`;
+
+        const upload$ = this.storageSvc.uploadFile(storagePath, file);
+
+        upload$.subscribe({
+            next: ({ progress, url, path }) => {
+                queueItem.progress = progress;
+
+                // cuando ya tenemos URL (emisión final), actualizamos el form
+                if (url) {
+                    this.form.patchValue({
+                        coverUrl: url,
+                        // si usas coverPath:
+                        // coverPath: path,
+                    });
+                }
+            },
+            error: (err) => {
+                console.error('Error subiendo portada', err);
+                queueItem.progress = 0;
+            },
+        });
+    }
+
+    // 👉 llamado desde (change)="onPickMedia($event, 'image' | 'video')"
+    //    Sube cada archivo a Storage y añade la entrada al form cuando haya URL
+    onPickMedia(event: Event, type: 'image' | 'video'): void {
+        const input = event.target as HTMLInputElement;
+        const files = input.files;
+        if (!files || !files.length) return;
+
+        const mediaFA = this.mediaFA;
+        const projectId = this.id ?? 'tmp';
+
+        Array.from(files).forEach((file) => {
+            const queueItem: UploadItem = { name: file.name, progress: 0 };
+            this.uploadQueue.push(queueItem);
+
+            const storagePath = `projects/${projectId}/media/${Date.now()}-${file.name}`;
+            const upload$ = this.storageSvc.uploadFile(storagePath, file);
+
+            let added = false; // para no pushear dos veces el mismo media
+
+            upload$.subscribe({
+                next: ({ progress, url, path }) => {
+                    queueItem.progress = progress;
+
+                    if (url && path && !added) {
+                        added = true;
+                        mediaFA.push(
+                            this.fb.group({
+                                type: [type],
+                                url: [url],
+                                path: [path],
+                            })
+                        );
+                    }
+                },
+                error: (err) => {
+                    console.error('Error subiendo media', err);
+                    queueItem.progress = 0;
+                },
+            });
+        });
+    }
+
+    // 👉 llamado desde (click)="removeMedia($index)"
+    removeMedia(index: number): void {
+        this.mediaFA.removeAt(index);
     }
 }

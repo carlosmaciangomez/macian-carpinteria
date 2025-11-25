@@ -28,7 +28,9 @@ export class AdminProjectsListComponent {
         try {
             // borrar media de Storage
             for (const m of (p.media || [])) {
-                if (m.path) await this.storageSvc.deleteFile(m.path);
+                if (m.path) {
+                    await this.storageSvc.deleteFile(m.path);
+                }
             }
             // si en el futuro guardas coverPath, bórralo aquí también
 

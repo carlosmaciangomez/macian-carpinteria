@@ -1,0 +1,260 @@
+:host {
+    display: block;
+    padding: 2rem 1.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Contenedor principal del formulario */
+form {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Títulos */
+h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+h3 {
+    margin: 1.5rem 0 0.75rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Layout básico de cada campo */
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Campos de texto, select, textarea */
+input[type="text"],
+input[type="file"],
+textarea,
+select,
+input[formControlName] {
+    font: inherit;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Focus */
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #dc2626;
+    /* rojo corporativo */
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.15);
+    background: #ffffff;
+}
+
+/* Checkbox publicado */
+label.published {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 200px;
+
+    input[type="checkbox"] {
+        width: auto;
+        height: auto;
+    }
+}
+
+/* Errores de validación */
+.error {
+    margin-top: -0.3rem;
+    font-size: 0.8rem;
+    color: #b91c1c;
+}
+
+/* Separadores */
+hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 1.5rem 0;
+}
+
+/* Previsualización de portada */
+.cover {
+    margin-top: 0.75rem;
+    max-width: 260px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    display: block;
+}
+
+/* Cola de subidas */
+.uploads {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    h4 {
+        margin: 0 0 0.25rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+}
+
+/* Grid de media (fotos/vídeos) */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.media-item {
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem;
+    background: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    img,
+    video {
+        width: 100%;
+        border-radius: 8px;
+        display: block;
+        max-height: 180px;
+        object-fit: cover;
+    }
+}
+
+/* Botones */
+button[type="submit"],
+.btn-secondary,
+.btn-danger {
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    padding: 0.65rem 1.4rem;
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease,
+        color 0.15s ease;
+    white-space: nowrap;
+}
+
+/* Botón principal (submit) */
+button[type="submit"] {
+    background: #dc2626;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.25);
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(220, 38, 38, 0.3);
+}
+
+button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 5px 12px rgba(220, 38, 38, 0.25);
+}
+
+button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: none;
+}
+
+/* Botón secundario (enlace cancelar) */
+a.btn-secondary {
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+/* Botón peligro (quitar media) */
+.btn-danger {
+    background: #fee2e2;
+    color: #b91c1c;
+    align-self: flex-end;
+    padding-inline: 0.9rem;
+}
+
+.btn-danger:hover {
+    background: #fecaca;
+}
+
+/* Footer de botones */
+form>button[type="submit"],
+form>.btn-secondary {
+    margin-top: 0.5rem;
+}
+
+form>button[type="submit"]+.btn-secondary {
+    margin-left: 0.75rem;
+}
+
+/* Estado cargando */
+:host ::ng-deep .loading,
+.loading {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #6b7280;
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+    :host {
+        padding: 1rem;
+    }
+
+    form {
+        padding: 1.25rem;
+    }
+
+    form>button[type="submit"]+.btn-secondary {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}

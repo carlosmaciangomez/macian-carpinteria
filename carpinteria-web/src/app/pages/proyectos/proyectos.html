@@ -5,44 +5,50 @@
         <p>Nuestros trabajos realizados. Filtra por tipo si quieres ver algo concreto.</p>
     </header>
 
-    <!-- Filtros fijos arriba -->
+    <!-- Filtros dinámicos desde Firestore -->
     <div class="filtros-wrapper">
+        @if (categorias$ | async; as categorias) {
         <div class="filtros">
-            <button (click)="setTipo(null)" [class.filtro-activo]="!tipoActivo">
-                Todos
-            </button>
-
-            @for (tipo of tipos; track $index) {
-            <button (click)="setTipo(tipo)" [class.filtro-activo]="tipoActivo === tipo">
-                {{ tipo | titlecase }}
+            @for (cat of categorias; track cat.id) {
+            <button (click)="setTipo(cat.name)"
+                [class.filtro-activo]="tipoActivo === cat.name || (!tipoActivo && cat.name === 'Todos')">
+                {{ cat.name | titlecase }}
             </button>
             }
         </div>
+        }
     </div>
 
-    <!-- Lista (en móvil: columna) -->
+    <!-- Lista de proyectos -->
     <section class="grid">
         @for (p of proyectosFiltrados; track $index) {
+
         <article class="card">
 
             @if (portadaEsVideo(p)) {
             <video class="portada" [src]="getPortada(p)" muted controls></video>
             } @else {
-            <img class="portada" [src]="getPortada(p)" alt="Proyecto" />
+            <img class="portada" [src]="getPortada(p)" [alt]="p.title || 'Proyecto'" />
             }
 
             <div class="card-body">
                 <h3>{{ p.title }}</h3>
-                <p>{{ p.description }}</p>
+
                 <div class="meta">
-                    <span class="tipo">{{ p.tags[0] | titlecase }}</span>
+                    <span class="tipo">
+                        {{ (p.category || 'Sin categoría') | titlecase }}
+                    </span>
                     <span class="fecha">
-                        {{ p.createdAt?.toDate() | date:'shortDate' }}
+                        {{
+                        (p.createdAt?.toDate ? p.createdAt.toDate() : p.createdAt)
+                        | date:'shortDate'
+                        }}
                     </span>
                 </div>
             </div>
 
         </article>
+
         } @empty {
         <p class="empty">No hay proyectos publicados todavía.</p>
         }

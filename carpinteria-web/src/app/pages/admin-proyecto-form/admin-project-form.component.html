@@ -1,42 +1,53 @@
 @if (loading) {
 <div>Cargando proyecto...</div>
 } @else {
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+<form [formGroup]="form" (ngSubmit)="save()">
     <h2>{{ id ? 'Editar proyecto' : 'Nuevo proyecto' }}</h2>
 
+    <!-- TÍTULO -->
     <label>
         Título *
         <input formControlName="title" (blur)="onTitleBlur()" />
     </label>
 
-    @if (form.controls.title.touched && form.controls.title.invalid) {
+    @if (form.get('title')?.touched && form.get('title')?.invalid) {
     <div class="error">
         El título es obligatorio.
     </div>
     }
 
+    <!-- SLUG -->
     <label>
         Slug *
         <input formControlName="slug" />
     </label>
 
+    <!-- DESCRIPCIÓN -->
     <label>
         Descripción *
         <textarea formControlName="description" rows="6"></textarea>
     </label>
 
+    <!-- CATEGORÍA ÚNICA -->
     <label>
-        Tags (separadas por coma)
-        <input formControlName="tags" placeholder="cocinas, armarios, ..." />
-    </label>
+        Categoría
+        <select formControlName="category">
+            <option value="">Sin categoría</option>
 
-    <label class="published">
-        Publicado
-        <input type="checkbox" formControlName="published" />
+            @if (categorias$ | async; as categorias) {
+            @for (cat of categorias; track cat.id) {
+            <option [value]="cat.name">
+                {{ cat.name }}
+            </option>
+            }
+            }
+        </select>
     </label>
 
     <hr />
 
+    <!-- PORTADA -->
     <h3>Portada</h3>
     <input type="file" accept="image/*" (change)="onPickCover($event)" />
 
@@ -46,12 +57,15 @@
 
     <hr />
 
+    <!-- FOTOS -->
     <h3>Fotos</h3>
     <input type="file" accept="image/*" multiple (change)="onPickMedia($event, 'image')" />
 
+    <!-- VÍDEOS -->
     <h3>Vídeos</h3>
     <input type="file" accept="video/*" multiple (change)="onPickMedia($event, 'video')" />
 
+    <!-- COLA DE SUBIDAS -->
     @if (uploadQueue.length) {
     <div class="uploads">
         <h4>Subiendo...</h4>
@@ -64,10 +78,12 @@
     </div>
     }
 
+    <!-- MEDIA YA AÑADIDA -->
     @if (mediaFA.length) {
     <div class="media-grid">
         @for (c of mediaFA.controls; track $index) {
         <div class="media-item">
+
             @switch (c.value.type) {
             @case ('image') {
             <img [src]="c.value.url" />
@@ -87,6 +103,13 @@
 
     <hr />
 
+    <!-- PUBLICADO -->
+    <label class="published">
+        Publicado
+        <input type="checkbox" formControlName="published" />
+    </label>
+
+    <!-- BOTONES -->
     <button type="submit" [disabled]="saving">
         {{ id ? 'Guardar cambios' : 'Crear proyecto' }}
     </button>
