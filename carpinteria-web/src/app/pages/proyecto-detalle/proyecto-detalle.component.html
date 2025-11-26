@@ -1,0 +1,100 @@
+<!-- src/app/pages/proyecto-detalle/proyecto-detalle.component.html -->
+
+<div class="proyecto-detalle">
+
+    @if (project; as p) {
+
+    <div class="content-wrapper">
+        <!-- CABECERA -->
+        <header class="header">
+            <a routerLink="/proyectos" class="back">&larr; Volver a proyectos</a>
+
+            <h1>{{ p.title }}</h1>
+
+            <div class="meta">
+                <span class="tipo">
+                    {{ (p.category || 'Sin categoría') | titlecase }}
+                </span>
+                <span class="fecha">
+                    {{ toDate(p.createdAt) | date:'longDate' }}
+                </span>
+            </div>
+        </header>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="content">
+            <!-- COLUMNA IZQUIERDA: PORTADA + GALERÍA -->
+            <div class="col-galeria">
+
+                @if (p.coverUrl) {
+                <section class="portada">
+                    <img [src]="p.coverUrl || ''" [alt]="p.title || 'Portada del proyecto'" />
+                </section>
+                }
+
+                <section class="galeria">
+                    <h2>Galería</h2>
+
+                    @let items = p.media || [];
+
+                    @if (items.length > 0) {
+
+                    <!-- Media principal (la grande de arriba) -->
+                    <div class="media-principal">
+                        @let current = items[selectedMediaIndex] || items[0];
+
+                        <!-- Al hacer click se abre en otra pestaña para poder hacer zoom -->
+                        <a class="principal-link" [href]="current.url" target="_blank" rel="noopener">
+                            @if (current.type === 'image') {
+                            <img class="principal-img" [src]="current.url" [alt]="p.title || 'Imagen del proyecto'" />
+                            } @else {
+                            <video class="principal-video" [src]="current.url" controls></video>
+                            }
+                        </a>
+
+                        <p class="tap-hint">
+                            Pulsa la imagen para verla en grande.
+                        </p>
+                    </div>
+
+                    <!-- Miniaturas -->
+                    <div class="media-grid">
+                        @for (m of items; track $index) {
+                        <button type="button" class="media-thumb"
+                            [class.media-thumb--active]="$index === selectedMediaIndex" (click)="selectMedia($index)">
+
+                            @if (m.type === 'image') {
+                            <img [src]="m.url" [alt]="p.title || 'Imagen del proyecto'" />
+                            } @else {
+                            <div class="video-thumb">
+                                <video [src]="m.url" muted></video>
+                                <span class="video-icon">Vídeo</span>
+                            </div>
+                            }
+
+                        </button>
+                        }
+                    </div>
+
+                    } @else {
+                    <p class="empty">Este proyecto todavía no tiene fotos ni vídeos.</p>
+                    }
+
+                </section>
+            </div>
+
+            <!-- COLUMNA DERECHA: DESCRIPCIÓN -->
+            <div class="col-descripcion">
+                <section class="descripcion">
+                    <h2>Descripción</h2>
+                    <p>{{ p.description }}</p>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    } @else {
+    <p class="loading">Cargando proyecto...</p>
+    }
+
+</div>

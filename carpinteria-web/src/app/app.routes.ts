@@ -7,6 +7,7 @@ import { AdminLoginComponent } from './pages/admin-login/admin-login';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel';
 
 import { ProyectosComponent } from './pages/proyectos/proyectos';
+import { ProyectoDetalleComponent } from './pages/proyecto-detalle/proyecto-detalle.component';
 
 import { AdminProjectsListComponent } from './pages/admin-proyectos/admin-projects-list.component';
 import { AdminProjectFormComponent } from './pages/admin-proyecto-form/admin-project-form.component';
@@ -17,7 +18,11 @@ export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
   { path: 'servicios', component: Servicios },
 
-  { path: 'proyectos', component: ProyectosComponent, canActivate: [authGuard] },
+  // Página de listado de proyectos (PÚBLICA)
+  { path: 'proyectos', component: ProyectosComponent },
+
+  // Página de detalle de un proyecto por slug (PÚBLICA)
+  { path: 'proyectos/:slug', component: ProyectoDetalleComponent },
 
   { path: 'resenas', component: ResenasComponent },
   { path: 'contacto', component: ContactoComponent },

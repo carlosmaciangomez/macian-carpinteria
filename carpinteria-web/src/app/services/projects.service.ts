@@ -1,3 +1,5 @@
+// src/app/services/projects.service.ts
+
 import { Injectable, inject } from '@angular/core';
 import {
     Firestore,
@@ -5,52 +7,60 @@ import {
     collectionData,
     doc,
     setDoc,
-    deleteDoc,
+    query,
+    where,
+    limit
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Project } from '../models/project.model';
-import { CategoriesService } from './categories.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
     private firestore = inject(Firestore);
-    private categoriesSvc = inject(CategoriesService);
-
     private projectsCollection = collection(this.firestore, 'projects');
 
-    // Leer proyectos (incluyendo el id del documento)
+    // 🔹 Leer todos los proyectos
     getProjects$(): Observable<Project[]> {
         return collectionData(this.projectsCollection, {
             idField: 'id',
         }) as Observable<Project[]>;
     }
 
-    // Crear o actualizar un proyecto
+    // 🔹 Leer UN proyecto por slug (para la página de detalle)
+    getProjectBySlug$(slug: string): Observable<Project | null> {
+        const q = query(
+            this.projectsCollection,
+            where('slug', '==', slug),
+            limit(1)
+        );
+
+        return collectionData(q, { idField: 'id' }).pipe(
+            map((arr: any[]) => (arr[0] as Project) ?? null)
+        );
+    }
+
+    // 🔹 Crear o actualizar un proyecto
     async save(project: Project): Promise<void> {
         const data: Project = { ...project };
 
-        // Aseguramos que siempre haya array en tags
-        data.tags = (data.tags || []).map(t => t.trim()).filter(t => !!t);
-
-        // Si no hay id → generamos uno nuevo
-        let docRef;
+        // Si NO hay id → crear documento nuevo con id automático
         if (!data.id) {
-            docRef = doc(this.projectsCollection);
-            data.id = docRef.id;
-        } else {
-            docRef = doc(this.firestore, `projects/${data.id}`);
+            const newDocRef = doc(this.projectsCollection); // genera id nuevo
+            data.id = newDocRef.id;
+            await setDoc(newDocRef, data);
+            return;
         }
 
-        // Guardamos el proyecto
+        // Si hay id → crear/actualizar ese doc (merge)
+        const docRef = doc(this.firestore, `projects/${data.id}`);
         await setDoc(docRef, data, { merge: true });
-
-        // Y sincronizamos categorías a partir de las tags
-        await this.categoriesSvc.ensureCategories(data.tags || []);
     }
 
-    // Borrar un proyecto por id
+    // 🔹 (Opcional) borrar proyecto, si ya lo tenías
     async deleteProject(id: string): Promise<void> {
-        const ref = doc(this.firestore, `projects/${id}`);
-        await deleteDoc(ref);
+        // Si ya tienes implementado esto en otro sitio, mantén tu versión
+        const docRef = doc(this.firestore, `projects/${id}`);
+        await setDoc(docRef, { deleted: true }, { merge: true });
     }
 }

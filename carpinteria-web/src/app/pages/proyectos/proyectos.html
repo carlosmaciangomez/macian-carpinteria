@@ -23,7 +23,8 @@
     <section class="grid">
         @for (p of proyectosFiltrados; track $index) {
 
-        <article class="card">
+        <!-- AHORA LA TARJETA ES CLICABLE -->
+        <article class="card" [routerLink]="['/proyectos', p.slug]">
 
             @if (portadaEsVideo(p)) {
             <video class="portada" [src]="getPortada(p)" muted controls></video>
