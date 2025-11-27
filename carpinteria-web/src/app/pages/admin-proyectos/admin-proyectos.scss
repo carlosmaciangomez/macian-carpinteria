@@ -3,24 +3,34 @@
     padding: 24px;
     max-width: 1100px;
     margin: 0 auto;
-    color: #111827; // gris muy oscuro
+    color: #111827;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
-/* Header */
+/* Header principal */
 .admin-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column; // apilado: volver -> h2 -> botón
+    align-items: flex-start;
     gap: 12px;
     margin-bottom: 18px;
+}
 
-    h2 {
-        margin: 0;
-        font-size: 1.6rem;
-        font-weight: 700;
-        letter-spacing: .2px;
-    }
+/* Título "Proyectos" debajo del volver */
+.admin-header .title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: .2px;
+}
+
+/* Botón volver */
+.back {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #666;
 }
 
 /* Botones */
@@ -39,7 +49,8 @@
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: transform .05s ease, background .15s ease, border .15s ease, opacity .15s ease;
+    transition: transform .05s ease, background .15s ease,
+        border .15s ease, opacity .15s ease;
 
     &:active {
         transform: translateY(1px);
@@ -49,6 +60,12 @@
         opacity: .6;
         cursor: not-allowed;
     }
+}
+
+/* Botón nuevo proyecto en ancho completo */
+.btn-full {
+    width: 100%;
+    text-align: center;
 }
 
 .btn {
@@ -126,7 +143,7 @@
             flex: 0 0 auto;
         }
 
-        .title {
+        .title-project {
             font-weight: 700;
             font-size: 1.05rem;
             line-height: 1.2;
@@ -179,10 +196,9 @@ p {
     }
 
     .admin-header {
-        flex-direction: column;
         align-items: stretch;
 
-        .btn {
+        .btn-full {
             width: 100%;
         }
     }
@@ -192,7 +208,7 @@ p {
         align-items: stretch;
 
         .left {
-            .title {
+            .title-project {
                 max-width: 100%;
             }
         }

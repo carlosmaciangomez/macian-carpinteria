@@ -1,5 +1,3 @@
-// src/app/admin/admin-project-form/admin-project-form.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,7 +7,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectsService } from '../../services/projects.service';
 import { Project } from '../../models/project.model';
 
@@ -30,7 +28,7 @@ interface Category {
 @Component({
     selector: 'app-admin-project-form',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule,  RouterModule],
     templateUrl: './admin-project-form.component.html',
     styleUrls: ['./admin-proyecto-form.scss'],
 })

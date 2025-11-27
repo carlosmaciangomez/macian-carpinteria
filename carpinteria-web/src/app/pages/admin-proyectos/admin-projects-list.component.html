@@ -1,6 +1,16 @@
 <div class="admin-header">
-    <h2>Proyectos</h2>
-    <a routerLink="/admin-proyectos/nuevo" class="btn">+ Nuevo proyecto</a>
+    <!-- Botón volver -->
+    <a routerLink="/admin-panel" class="back">
+        &larr; Volver al panel
+    </a>
+
+    <!-- Título debajo del botón volver -->
+    <h2 class="title">Proyectos</h2>
+
+    <!-- Botón nuevo proyecto debajo del título -->
+    <a routerLink="/admin-proyectos/nuevo" class="btn btn-full">
+        + Nuevo proyecto
+    </a>
 </div>
 
 @if (projects$ | async; as projects) {
@@ -13,7 +23,7 @@
             }
 
             <div>
-                <div class="title">{{ p.title }}</div>
+                <div class="title-project">{{ p.title }}</div>
                 <div class="meta">
                     @if (p.published === false) {
                     <span class="draft">BORRADOR</span>
@@ -27,7 +37,9 @@
         </div>
 
         <div class="actions">
-            <a [routerLink]="['/admin-proyectos/editar', p.id]" class="btn-secondary">Editar</a>
+            <a [routerLink]="['/admin-proyectos/editar', p.id]" class="btn-secondary">
+                Editar
+            </a>
             <button class="btn-danger" (click)="deleteProject(p)" [disabled]="deletingId === p.id">
                 {{ deletingId === p.id ? 'Borrando...' : 'Borrar' }}
             </button>
