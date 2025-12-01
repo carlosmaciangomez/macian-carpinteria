@@ -80,7 +80,7 @@ export class ProyectosComponent implements OnInit {
       return;
     }
 
-    // 🔹 ahora filtramos por category (un único string), no por tags[]
+    // ahora filtramos por category (un único string)
     this.proyectosFiltrados = this.proyectos.filter(
       p => (p.category || '') === this.tipoActivo
     );
@@ -117,5 +117,14 @@ export class ProyectosComponent implements OnInit {
 
     // 3) Si no hay coverUrl ni imágenes, miramos el primer media
     return (proyecto.media || [])[0]?.type === 'video';
+  }
+
+  public toDate(value: any): Date | null {
+    if (!value) return null;
+    if (value instanceof Date) return value;
+    if (value.toDate) {
+      return value.toDate();
+    }
+    return new Date(value);
   }
 }

@@ -1,58 +1,63 @@
 <div class="proyectos-page">
-
+    <!-- CABECERA -->
     <header class="header">
         <h1>Proyectos</h1>
-        <p>Nuestros trabajos realizados. Filtra por tipo si quieres ver algo concreto.</p>
+        <p>
+            Algunos de los trabajos que hemos realizado: cocinas, mobiliario, armarios,
+            puertas y proyectos contract para viviendas y negocios.
+        </p>
     </header>
 
-    <!-- Filtros dinámicos desde Firestore -->
+    <!-- FILTROS POR CATEGORÍA -->
     <div class="filtros-wrapper">
         @if (categorias$ | async; as categorias) {
         <div class="filtros">
             @for (cat of categorias; track cat.id) {
-            <button (click)="setTipo(cat.name)"
-                [class.filtro-activo]="tipoActivo === cat.name || (!tipoActivo && cat.name === 'Todos')">
-                {{ cat.name | titlecase }}
+            <button type="button" (click)="setTipo(cat.id)" [class.filtro-activo]="
+              tipoActivo === cat.id ||
+              (!tipoActivo && cat.id === 'Todos')
+            ">
+                {{ cat.name }}
             </button>
             }
         </div>
         }
     </div>
 
-    <!-- Lista de proyectos -->
+    <!-- GRID DE PROYECTOS -->
     <section class="grid">
-        @for (p of proyectosFiltrados; track $index) {
-
-        <!-- AHORA LA TARJETA ES CLICABLE -->
-        <article class="card" [routerLink]="['/proyectos', p.slug]">
-
-            @if (portadaEsVideo(p)) {
-            <video class="portada" [src]="getPortada(p)" muted controls></video>
+        @if (proyectosFiltrados.length > 0) {
+        @for (p of proyectosFiltrados; track p.id) {
+        <a class="card" [routerLink]="['/proyectos', p.slug]">
+            @if (!portadaEsVideo(p)) {
+            <img class="portada" [src]="getPortada(p) || 'assets/placeholder-proyecto.jpg'"
+                [alt]="p.title || 'Proyecto de carpintería'" />
             } @else {
-            <img class="portada" [src]="getPortada(p)" [alt]="p.title || 'Proyecto'" />
+            <video class="portada" [src]="getPortada(p)" muted></video>
             }
 
             <div class="card-body">
                 <h3>{{ p.title }}</h3>
+
+                <p>
+                    {{ p.description }}
+                </p>
 
                 <div class="meta">
                     <span class="tipo">
                         {{ (p.category || 'Sin categoría') | titlecase }}
                     </span>
                     <span class="fecha">
-                        {{
-                        (p.createdAt?.toDate ? p.createdAt.toDate() : p.createdAt)
-                        | date:'shortDate'
-                        }}
+                        {{ toDate(p.createdAt) | date:'longDate' }}
                     </span>
                 </div>
             </div>
-
-        </article>
-
-        } @empty {
-        <p class="empty">No hay proyectos publicados todavía.</p>
+        </a>
+        }
+        } @else {
+        <p class="empty">
+            No hay proyectos publicados en esta categoría por el momento.
+        </p>
         }
     </section>
-
 </div>

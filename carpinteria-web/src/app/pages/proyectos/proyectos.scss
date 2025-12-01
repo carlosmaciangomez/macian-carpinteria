@@ -85,6 +85,16 @@
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     display: grid;
+
+    /* ahora .card es un <a>: quitamos estilo de enlace */
+    text-decoration: none;
+    color: inherit;
+}
+
+.card:hover,
+.card:focus,
+.card:active {
+    text-decoration: none;
 }
 
 .portada {
