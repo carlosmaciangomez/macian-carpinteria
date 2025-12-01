@@ -1,7 +1,120 @@
-<section class="en-construccion">
-    <div class="contenedor">
-        <img src="assets/building.png" alt="Página en construcción" />
-        <h2>Estamos trabajando en esta sección</h2>
-        <p>Pronto estará disponible. ¡Gracias por tu paciencia!</p>
-    </div>
-</section>
+<main class="services">
+    <!-- HERO / CABECERA -->
+    <section class="services__hero">
+        <div class="services__hero-inner">
+            <!--<p class="services__eyebrow">Servicios</p>-->
+            <h1 class="services__title">Trabajos de carpintería a medida</h1>
+            <p class="services__subtitle">
+                Realizamos proyectos de carpintería pensados para durar: diseñamos, fabricamos e
+                instalamos soluciones a medida para viviendas y negocios.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECCIÓN ANTES / DESPUÉS -->
+    <section class="services__before-after">
+        <h2 class="services__before-after-title">Antes y después</h2>
+        <p class="services__before-after-text">
+            Desliza la barra para ver el cambio entre el estado inicial y el resultado final del
+            proyecto.
+        </p>
+
+        <div class="piscina-slider">
+            <div class="piscina-images">
+                <!-- Ambas imágenes ocupan el 100%, sin deformarse -->
+                <img class="piscina-img piscina-img--before" src="assets/antesPiscina.jpg" alt="Antes piscina"
+                    [style.clip-path]="'inset(0 ' + (100 - sliderPosition) + '% 0 0)'" />
+
+                <img class="piscina-img piscina-img--after" src="assets/despuesPiscina.jpg" alt="Después piscina"
+                    [style.clip-path]="'inset(0 0 0 ' + sliderPosition + '%)'" />
+            </div>
+
+            <!-- Slider transparente por encima -->
+            <input type="range" min="0" max="100" [value]="sliderPosition" (input)="onSliderInput($event)"
+                class="piscina-range" aria-label="Comparador antes/después" />
+
+            <!-- Línea central -->
+            <div class="piscina-line" [style.left.%]="sliderPosition" aria-hidden="true"></div>
+
+            <!-- Botón circular -->
+            <div class="piscina-handle" [style.left.%]="sliderPosition" aria-hidden="true">
+                ↔
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTA DE SERVICIOS -->
+    <section class="services__list" aria-label="Tipos de trabajos que realizamos">
+        <!-- 1: Cocinas -->
+        <article class="service-item">
+            <div class="service-item__media service-item__media--kitchens"></div>
+            <div class="service-item__content">
+                <h2 class="service-item__title">Cocinas a medida</h2>
+                <p class="service-item__text">
+                    Diseño y fabricación de cocinas funcionales, con distribución optimizada, herrajes
+                    de calidad y acabados que encajan con tu estilo de vida.
+                </p>
+            </div>
+        </article>
+
+        <!-- 2: Mobiliario y salones -->
+        <article class="service-item">
+            <div class="service-item__media service-item__media--living"></div>
+            <div class="service-item__content">
+                <h2 class="service-item__title">Mobiliario y salones</h2>
+                <p class="service-item__text">
+                    Muebles de salón, estanterías, aparadores y panelados de TV a medida para
+                    aprovechar el espacio y mantener una línea estética coherente.
+                </p>
+            </div>
+        </article>
+
+        <!-- 3: Armarios y vestidores -->
+        <article class="service-item">
+            <div class="service-item__media service-item__media--wardrobes"></div>
+            <div class="service-item__content">
+                <h2 class="service-item__title">Armarios y vestidores</h2>
+                <p class="service-item__text">
+                    Armarios empotrados, frentes e interiores personalizados y vestidores abiertos,
+                    adaptados a tus rutinas y a la distribución de la vivienda.
+                </p>
+            </div>
+        </article>
+
+        <!-- 4: Puertas y pasos interiores -->
+        <article class="service-item">
+            <div class="service-item__media service-item__media--doors"></div>
+            <div class="service-item__content">
+                <h2 class="service-item__title">Puertas y pasos interiores</h2>
+                <p class="service-item__text">
+                    Puertas de paso, correderas y especiales, con distintos acabados y sistemas de
+                    apertura para integrarse con el resto del proyecto.
+                </p>
+            </div>
+        </article>
+
+        <!-- 5: Revestimientos y panelados -->
+        <article class="service-item">
+            <div class="service-item__media service-item__media--wallpanels"></div>
+            <div class="service-item__content">
+                <h2 class="service-item__title">Revestimientos y panelados</h2>
+                <p class="service-item__text">
+                    Panelados de pared, frentes decorativos y elementos separadores en madera para dar
+                    calidez a viviendas y locales comerciales.
+                </p>
+            </div>
+        </article>
+
+        <!-- 6: Proyectos especiales y contract -->
+        <article class="service-item">
+            <div class="service-item__media service-item__media--special"></div>
+            <div class="service-item__content">
+                <h2 class="service-item__title">Proyectos especiales y contract</h2>
+                <p class="service-item__text">
+                    Desarrollo de proyectos a medida para estudios de arquitectura, interioristas y
+                    empresas: hoteles, oficinas, locales y espacios singulares.
+                </p>
+            </div>
+        </article>
+    </section>
+</main>

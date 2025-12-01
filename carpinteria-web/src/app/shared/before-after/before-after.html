@@ -1,0 +1,25 @@
+<div #container class="ba" (pointerdown)="onPointerDown($event)">
+    <!-- Imagen "después" de fondo -->
+    <img class="ba__image ba__image--after" [src]="afterSrc" [alt]="afterLabel" />
+
+    <!-- Capa "antes" recortada por la posición de la barra -->
+    <div class="ba__before" [style.width.%]="dividerPosition">
+        <img class="ba__image ba__image--before" [src]="beforeSrc" [alt]="beforeLabel" />
+    </div>
+
+    <!-- Barra + botón -->
+    <div class="ba__divider" [style.left.%]="dividerPosition">
+        <div class="ba__line"></div>
+
+        <!-- Botón circular -->
+        <div class="ba__handle">
+            <span class="ba__handle-icon">⇆</span>
+        </div>
+    </div>
+
+    <!-- Etiquetas -->
+    <div class="ba__labels">
+        <span class="ba__label ba__label--left">{{ beforeLabel }}</span>
+        <span class="ba__label ba__label--right">{{ afterLabel }}</span>
+    </div>
+</div>

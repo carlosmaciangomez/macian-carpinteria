@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
-import { Servicios } from './pages/servicios/servicios';
+import { ServiciosComponent } from './pages/servicios/servicios';
 import { ResenasComponent } from './pages/resenas/resenas';
 import { ContactoComponent } from './pages/contacto/contacto';
 import { AdminLoginComponent } from './pages/admin-login/admin-login';
@@ -16,7 +16,10 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
-  { path: 'servicios', component: Servicios },
+  {
+    path: 'servicios',
+    component: ServiciosComponent,
+  },
 
   // Página de listado de proyectos (PÚBLICA)
   { path: 'proyectos', component: ProyectosComponent },

@@ -1,26 +1,32 @@
 .proyectos-page {
     min-height: fit-content;
     margin-bottom: 50px;
-    background: #f5f3f1;
+    /* mismo fondo base que servicios */
+    background: #e5e7eb;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-/* header normal */
+/* header con estilo parecido al hero de servicios */
 .header {
-    padding: 24px 20px 24px;
-    height: fit-content;
+    background: linear-gradient(180deg, #f9fafb, #e5e7eb);
+    color: #111827;
+    padding: 3rem 1.5rem 2.5rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 
     h1 {
-        font-size: 2rem;
-        color: #3b2b24;
-        margin: 0 0 6px 0;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 0.9rem 0;
     }
 
     p {
-        color: #6b5b52;
-        font-size: 1rem;
+        max-width: 640px;
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.6;
         margin: 0;
     }
 }
@@ -30,7 +36,8 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    background: #f5f3f1;
+    /* mismo tono que el fondo de la página */
+    background: #e5e7eb;
     padding: 10px 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
