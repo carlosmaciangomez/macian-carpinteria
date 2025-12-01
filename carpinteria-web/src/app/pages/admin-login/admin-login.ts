@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminUsersService } from '../../services/admin-users.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin-login',
@@ -12,7 +13,7 @@ import { AdminUsersService } from '../../services/admin-users.service';
   templateUrl: './admin-login.html',
   styleUrls: ['./admin-login.scss']
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnInit {
   username = '';
   password = '';
   loading = false;
@@ -22,11 +23,17 @@ export class AdminLoginComponent {
     private authService: AuthService,
     private adminUsers: AdminUsersService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private title: Title
   ) {
+    // Si ya está logueado, lo mandamos directo al panel
     if (this.authService.isLoggedInSync()) {
       this.router.navigateByUrl('/admin-panel');
     }
+  }
+
+  ngOnInit(): void {
+    this.title.setTitle('Acceso privado');
   }
 
   async onSubmit(form: NgForm) {

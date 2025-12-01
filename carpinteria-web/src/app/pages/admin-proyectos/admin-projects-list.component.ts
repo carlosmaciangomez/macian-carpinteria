@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+
 import { ProjectsService } from '../../services/projects.service';
 import { StorageService } from '../../services/storage.service';
 import { Project } from '../../models/project.model';
@@ -12,16 +14,23 @@ import { Project } from '../../models/project.model';
     templateUrl: './admin-projects-list.component.html',
     styleUrls: ['./admin-proyectos.scss']
 })
-export class AdminProjectsListComponent {
+export class AdminProjectsListComponent implements OnInit {
     private projectsSvc = inject(ProjectsService);
     private storageSvc = inject(StorageService);
+    private title = inject(Title);
 
     projects$ = this.projectsSvc.getProjects$();
     deletingId: string | null = null;
 
+    ngOnInit(): void {
+        this.title.setTitle('Admin Proyectos');
+    }
+
     async deleteProject(p: Project) {
         if (!p.id) return;
-        const ok = confirm(`¿Borrar el proyecto "${p.title}"? Esto elimina también sus archivos.`);
+        const ok = confirm(
+            `¿Borrar el proyecto "${p.title}"? Esto elimina también sus archivos.`
+        );
         if (!ok) return;
 
         this.deletingId = p.id;

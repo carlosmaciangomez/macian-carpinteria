@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { ProjectsService } from '../../services/projects.service';
 import { Project } from '../../models/project.model';
@@ -35,7 +36,8 @@ export class ProyectosComponent implements OnInit {
   constructor(
     private projectsService: ProjectsService,
     private route: ActivatedRoute,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private title: Title
   ) {
     // referencia a la colección "categories"
     const colRef = collection(this.firestore, 'categories');
@@ -52,6 +54,7 @@ export class ProyectosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.title.setTitle('Proyectos');
     // 1) cargamos proyectos publicados desde Firestore
     this.projectsService.getProjects$()
       .pipe(map(ps => ps.filter(p => !!p.published)))

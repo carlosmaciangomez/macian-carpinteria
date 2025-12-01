@@ -8,6 +8,8 @@ import {
     Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+
 import { ProjectsService } from '../../services/projects.service';
 import { Project } from '../../models/project.model';
 
@@ -28,7 +30,7 @@ interface Category {
 @Component({
     selector: 'app-admin-project-form',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule,  RouterModule],
+    imports: [CommonModule, ReactiveFormsModule, RouterModule],
     templateUrl: './admin-project-form.component.html',
     styleUrls: ['./admin-proyecto-form.scss'],
 })
@@ -52,11 +54,19 @@ export class AdminProjectFormComponent implements OnInit {
         private router: Router,
         private projectsSvc: ProjectsService,
         private firestore: Firestore,
-        private storageSvc: StorageService
+        private storageSvc: StorageService,
+        private title: Title
     ) { }
 
     ngOnInit(): void {
         this.id = this.route.snapshot.paramMap.get('id');
+
+        // 🔹 título según estemos creando o editando
+        if (this.id) {
+            this.title.setTitle('Editar proyecto');
+        } else {
+            this.title.setTitle('Nuevo proyecto');
+        }
 
         // 🔹 formulario: usamos "category" en vez de "tags"
         this.form = this.fb.group({

@@ -1,4 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import emailjs from '@emailjs/browser';
 
 @Component({
@@ -7,13 +8,20 @@ import emailjs from '@emailjs/browser';
   templateUrl: './contacto.html',
   styleUrls: ['./contacto.scss']
 })
-export class ContactoComponent implements AfterViewInit {
+export class ContactoComponent implements AfterViewInit, OnInit {
   loading = false;
   success = false;
   error = false;
   captchaError = false;
   fieldError: string | null = null;
   recaptchaLoaded = false;
+
+  constructor(private title: Title) { }
+
+  ngOnInit(): void {
+    // Título de la pestaña para /contacto
+    this.title.setTitle('Contacto');
+  }
 
   ngAfterViewInit() {
     // Esperamos un poco a que Angular cargue el DOM
@@ -76,8 +84,7 @@ export class ContactoComponent implements AfterViewInit {
         form.reset();
         (window as any).grecaptcha?.reset();
       })
-      .catch((err) => {
-        //console.error('Error enviando mensaje:', err);
+      .catch(() => {
         this.loading = false;
         this.error = true;
       });

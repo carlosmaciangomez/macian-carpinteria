@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { ProjectsService } from '../../services/projects.service';
 import { Project } from '../../models/project.model';
@@ -22,18 +23,32 @@ export class ProyectoDetalleComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private projectsSvc: ProjectsService
+        private projectsSvc: ProjectsService,
+        private title: Title
     ) { }
 
     ngOnInit(): void {
-        // cogemos el slug de la URL /proyectos/:slug
+        // cogemos el slug de la URL /proyecto/:slug (o /proyectos/:slug)
         const slug = this.route.snapshot.paramMap.get('slug');
-        if (!slug) return;
+        if (!slug) {
+            // por si acaso, si no hay slug ponemos un título genérico
+            this.title.setTitle('Proyecto');
+            return;
+        }
 
         this.projectsSvc.getProjects$().subscribe(projects => {
-            const found = projects.find(p => p.slug === slug);
-            this.project = found ?? null;
+            const found = projects.find(p => p.slug === slug) || null;
+            this.project = found;
             this.selectedMediaIndex = 0; // siempre empezamos por el primero
+
+            // ⬇️ aquí actualizamos el <title> según el proyecto
+            if (found?.title) {
+                this.title.setTitle(
+                    `${found.title}`
+                );
+            } else {
+                this.title.setTitle('Proyecto');
+            }
         });
     }
 

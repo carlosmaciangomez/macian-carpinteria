@@ -1,27 +1,22 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [],
   templateUrl: './home.html',
-  styleUrl: './home.scss',
+  styleUrls: ['./home.scss'],
 })
-export class Home implements AfterViewInit {
+export class Home implements AfterViewInit, OnInit {
 
-  ngAfterViewInit(): void {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-  }
+  constructor(private title: Title) { }
 
   ngOnInit() {
+    // 🔹 Título de la página de inicio
+    this.title.setTitle('Macián Carpintería');
+
+    // 🔹 Listener para mostrar / ocultar botón "scroll-top"
     window.addEventListener('scroll', () => {
       const button = document.querySelector('.scroll-top') as HTMLElement;
       if (window.scrollY > 300) {
@@ -30,6 +25,23 @@ export class Home implements AfterViewInit {
         button?.classList.remove('show');
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document
+      .querySelectorAll('.reveal')
+      .forEach((el) => observer.observe(el));
   }
 
   scrollToTop() {
