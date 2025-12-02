@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/pages/proyecto-detalle/proyecto-detalle.component.ts
+
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 import { ProjectsService } from '../../services/projects.service';
 import { Project } from '../../models/project.model';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-proyecto-detalle',
@@ -13,12 +16,8 @@ import { Project } from '../../models/project.model';
     templateUrl: './proyecto-detalle.component.html',
     styleUrls: ['./proyecto-detalle.component.scss'],
 })
-export class ProyectoDetalleComponent implements OnInit {
-
-    // proyecto que mostramos en la vista
+export class ProyectoDetalleComponent {
     project: Project | null = null;
-
-    // índice de la foto/vídeo seleccionado en la galería
     selectedMediaIndex = 0;
 
     constructor(
@@ -28,42 +27,41 @@ export class ProyectoDetalleComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // cogemos el slug de la URL /proyecto/:slug (o /proyectos/:slug)
+        // slug de la URL: /proyectos/:slug
         const slug = this.route.snapshot.paramMap.get('slug');
         if (!slug) {
-            // por si acaso, si no hay slug ponemos un título genérico
-            this.title.setTitle('Proyecto');
             return;
         }
 
-        this.projectsSvc.getProjects$().subscribe(projects => {
-            const found = projects.find(p => p.slug === slug) || null;
-            this.project = found;
-            this.selectedMediaIndex = 0; // siempre empezamos por el primero
+        // 🔹 LEEMOS SOLO EL PROYECTO PUBLICADO CON ESE SLUG
+        this.projectsSvc.getProjectBySlug$(slug)
+            .pipe(take(1))
+            .subscribe({
+                next: (p) => {
+                    this.project = p ?? null;
 
-            // ⬇️ aquí actualizamos el <title> según el proyecto
-            if (found?.title) {
-                this.title.setTitle(
-                    `${found.title}`
-                );
-            } else {
-                this.title.setTitle('Proyecto');
-            }
-        });
+                    if (p) {
+                        this.selectedMediaIndex = 0;
+                        this.title.setTitle(`${p.title} | Macián Carpintería`);
+                    }
+                },
+                error: (err) => {
+                    console.error('Error cargando proyecto por slug', err);
+                    this.project = null;
+                },
+            });
     }
 
-    // 👉 llamado desde (click)="selectMedia($index)" en las miniaturas
     selectMedia(index: number): void {
-        if (!this.project || !this.project.media) return;
-        if (index < 0 || index >= this.project.media.length) return;
         this.selectedMediaIndex = index;
     }
 
-    // 👉 usado en la plantilla: {{ toDate(p.createdAt) | date:'longDate' }}
     toDate(value: any): Date | null {
         if (!value) return null;
         if (value instanceof Date) return value;
-        if (value.toDate) return value.toDate(); // Timestamp de Firestore
+        if (value.toDate) {
+            return value.toDate();
+        }
         return new Date(value);
     }
 }

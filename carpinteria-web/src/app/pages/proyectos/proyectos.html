@@ -1,41 +1,55 @@
+<!-- src/app/pages/proyectos/proyectos.html -->
+
 <div class="proyectos-page">
-    <!-- CABECERA -->
+
+    <!-- HEADER -->
     <header class="header">
         <h1>Proyectos</h1>
         <p>
-            Algunos de los trabajos que hemos realizado: cocinas, mobiliario, armarios,
-            puertas y proyectos contract para viviendas y negocios.
+            Algunos de los trabajos de carpintería que hemos realizado: cocinas,
+            armarios, mobiliario a medida, puertas, revestimientos y proyectos custom.
         </p>
     </header>
 
-    <!-- FILTROS POR CATEGORÍA -->
-    <div class="filtros-wrapper">
-        @if (categorias$ | async; as categorias) {
+    <!-- FILTROS -->
+    <section class="filtros-wrapper">
         <div class="filtros">
-            @for (cat of categorias; track cat.id) {
-            <button type="button" (click)="setTipo(cat.id)" [class.filtro-activo]="
-              tipoActivo === cat.id ||
-              (!tipoActivo && cat.id === 'Todos')
-            ">
+
+            <!-- Botón "Todos" -->
+            <button type="button" (click)="setTipo('Todos')" [class.filtro-activo]="tipoActivo === 'Todos'">
+                Todos
+            </button>
+
+            <!-- Botones de categorías desde Firestore -->
+            @if (categorias$ | async; as cats) {
+            @for (cat of cats; track cat.id) {
+            <button type="button" (click)="setTipo(cat.id)" [class.filtro-activo]="tipoActivo === cat.id">
                 {{ cat.name }}
             </button>
             }
+            }
         </div>
-        }
-    </div>
+    </section>
 
     <!-- GRID DE PROYECTOS -->
     <section class="grid">
-        @if (proyectosFiltrados.length > 0) {
+
+        @if (proyectosFiltrados.length === 0) {
+        <p class="empty">
+            No hay proyectos en esta categoría todavía.
+        </p>
+        } @else {
         @for (p of proyectosFiltrados; track p.id) {
-        <a class="card" [routerLink]="['/proyectos', p.slug]">
-            @if (!portadaEsVideo(p)) {
-            <img class="portada" [src]="getPortada(p) || 'assets/placeholder-proyecto.jpg'"
-                [alt]="p.title || 'Proyecto de carpintería'" />
-            } @else {
+
+        <article class="card" [routerLink]="['/proyectos', p.slug]">
+            <!-- Portada -->
+            @if (portadaEsVideo(p)) {
             <video class="portada" [src]="getPortada(p)" muted></video>
+            } @else {
+            <img class="portada" [src]="getPortada(p)" [alt]="p.title" />
             }
 
+            <!-- Texto -->
             <div class="card-body">
                 <h3>{{ p.title }}</h3>
 
@@ -45,19 +59,17 @@
 
                 <div class="meta">
                     <span class="tipo">
-                        {{ (p.category || 'Sin categoría') | titlecase }}
+                        {{ p.category || 'Proyecto' }}
                     </span>
                     <span class="fecha">
                         {{ toDate(p.createdAt) | date:'longDate' }}
                     </span>
                 </div>
             </div>
-        </a>
+        </article>
+
         }
-        } @else {
-        <p class="empty">
-            No hay proyectos publicados en esta categoría por el momento.
-        </p>
         }
+
     </section>
 </div>

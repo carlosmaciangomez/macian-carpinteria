@@ -1,6 +1,8 @@
+// src/app/pages/proyectos/proyectos.ts
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 import { ProjectsService } from '../../services/projects.service';
@@ -30,50 +32,50 @@ export class ProyectosComponent implements OnInit {
   // categorías dinámicas desde la colección "categories"
   public categorias$!: Observable<Category[]>;
 
-  // filtro activo: 'Todos' o el nombre de la categoría
+  // filtro activo: 'Todos' o el id de la categoría (ej: 'cocinas')
   public tipoActivo: string | null = 'Todos';
 
   constructor(
     private projectsService: ProjectsService,
-    private route: ActivatedRoute,
     private firestore: Firestore,
     private title: Title
   ) {
     // referencia a la colección "categories"
     const colRef = collection(this.firestore, 'categories');
 
-    // leemos las categorías y añadimos "Todos" al principio
+    // leemos las categorías ordenadas por nombre
     this.categorias$ = collectionData(colRef, { idField: 'id' }).pipe(
-      map((cats: any[]) => {
-        const ordenadas = [...cats].sort((a, b) =>
+      map((cats: any[]) =>
+        [...cats].sort((a, b) =>
           (a.name || '').localeCompare(b.name || '', 'es')
-        );
-        return [{ id: 'Todos', name: 'Todos' }, ...ordenadas];
-      })
+        )
+      )
     );
   }
 
   ngOnInit(): void {
-    this.title.setTitle('Proyectos');
-    // 1) cargamos proyectos publicados desde Firestore
-    this.projectsService.getProjects$()
-      .pipe(map(ps => ps.filter(p => !!p.published)))
+    this.title.setTitle('Proyectos de carpintería | Macián Carpintería');
+
+    // cargamos SOLO proyectos publicados desde Firestore
+    this.projectsService.getPublishedProjects$()
       .subscribe(ps => {
         this.proyectos = ps;
         this.aplicarFiltro(); // aplicamos filtro inicial
       });
-
-    // 2) leemos filtro inicial de la URL (?tipo=armarios)
-    this.route.queryParamMap.subscribe(params => {
-      const tipo = params.get('tipo');
-      this.tipoActivo = tipo ?? 'Todos';
-      this.aplicarFiltro();
-    });
   }
 
   public setTipo(tipo: string | null): void {
     this.tipoActivo = tipo;
     this.aplicarFiltro();
+  }
+
+  // (opcional) normalizar texto, por si acaso
+  private normalizar(texto: string | null | undefined): string {
+    return (texto || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
   }
 
   private aplicarFiltro(): void {
@@ -83,10 +85,13 @@ export class ProyectosComponent implements OnInit {
       return;
     }
 
-    // ahora filtramos por category (un único string)
-    this.proyectosFiltrados = this.proyectos.filter(
-      p => (p.category || '') === this.tipoActivo
-    );
+    const activoNorm = this.normalizar(this.tipoActivo);
+
+    // filtramos por category (un único string en el Project)
+    this.proyectosFiltrados = this.proyectos.filter(p => {
+      const catNorm = this.normalizar(p.category || '');
+      return catNorm === activoNorm;
+    });
   }
 
   public getPortada(proyecto: Project): string {
@@ -125,8 +130,8 @@ export class ProyectosComponent implements OnInit {
   public toDate(value: any): Date | null {
     if (!value) return null;
     if (value instanceof Date) return value;
-    if (value.toDate) {
-      return value.toDate();
+    if ((value as any).toDate) {
+      return (value as any).toDate();
     }
     return new Date(value);
   }
