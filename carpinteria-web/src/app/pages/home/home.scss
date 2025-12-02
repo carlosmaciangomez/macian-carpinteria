@@ -1,38 +1,47 @@
 /* ======= HERO ======= */
 .hero {
+  position: relative;
   width: 100%;
-  min-height: 50vh;
-  background: url('/assets/foto-local.jpg') center/cover no-repeat;
+  overflow: hidden;
+}
+
+/* La foto siempre entera, sin recortes */
+.hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Capa oscura encima de la foto */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* Contenido centrado encima de la foto */
+.hero-content {
+  position: absolute;
+  inset: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  color: white;
   padding: 2rem 1rem;
-  position: relative;
+}
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-  }
+.hero-content h1 {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
 
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    color: white;
-
-    h1 {
-      font-size: clamp(1.8rem, 6vw, 3rem);
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-    }
-
-    h3 {
-      font-size: clamp(1rem, 4vw, 1.6rem);
-      font-weight: 400;
-    }
-  }
+.hero-content h3 {
+  font-size: clamp(1rem, 4vw, 1.6rem);
+  font-weight: 400;
 }
 
 /* ======= QUIÉNES SOMOS ======= */
@@ -90,15 +99,22 @@
   filter: brightness(0.65);
 }
 
-/* Contenido sobre la imagen */
+/* Contenido sobre la imagen: capa borrosa a 100% */
 .servicio-content {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
-  max-width: 800px;
   padding: 2rem 1rem;
-  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   backdrop-filter: blur(4px);
-  border-radius: 12px;
+  -webkit-backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.25);
+
   animation: fadeIn 1s ease both;
 
   h3 {
@@ -119,6 +135,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -167,7 +184,6 @@
     content: "";
     position: absolute;
     inset: 0;
-    //background: url("/assets/pattern-light.png") repeat;
     opacity: 0.08;
     z-index: -1;
     pointer-events: none;
@@ -212,9 +228,17 @@
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     z-index: 1;
+
+    /* transición solo de la sombra */
+    transition: box-shadow 0.25s ease;
   }
 
-  @media (min-width: 900px) {
+  iframe:hover {
+    /* sombra un poco más fuerte en hover */
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+  }
+
+  @media (min-width: 948px) {
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -235,12 +259,17 @@
   }
 }
 
+.ubicacion-mapa {
+  width: 77%;
+}
+
 /* Animación general */
 @keyframes fadeInSection {
   from {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -253,4 +282,69 @@
   text-align: center;
   opacity: 0.6;
   font-size: clamp(1rem, 4vw, 1.2rem);
+}
+
+/* ================================
+    BREAKPOINT LAYOUT ANCHO (948px+)
+   ================================ */
+@media (min-width: 948px) {
+  .hero {
+    max-height: 430px;
+  }
+  /* Hero: texto alineado a la izquierda en pantallas anchas */
+  .hero-content {
+    align-items: flex-start;
+    text-align: left;
+    padding: 60px 7vw;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  /* Quiénes somos con más aire y texto alineado a la izquierda */
+  .quienes {
+    padding: 60px 7vw;
+    text-align: left;
+
+    p {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  /* Destacados en 2 columnas (2 por fila) */
+  .servicio.destacado {
+    display: inline-flex;
+    /* tarjeta en línea */
+    width: 50%;
+    /* 2 columnas */
+    vertical-align: top;
+  }
+
+  /* El tercero (alt) ocupa toda la fila */
+  .servicio.destacado.alt {
+    width: 100%;
+  }
+
+  /* Ubicación en 2 columnas (texto + mapa) */
+  .ubicacion {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    padding: 60px 7vw;
+    gap: 40px;
+  }
+
+  .ubicacion-texto {
+    flex: 1;
+    padding-right: 50px;
+  }
+
+  .ubicacion-mapa {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* pisamos el 77% para escritorio */
+  }
 }

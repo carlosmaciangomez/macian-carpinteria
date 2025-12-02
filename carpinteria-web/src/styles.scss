@@ -1,18 +1,18 @@
 :root {
-  --navbar-height: 70px;
+  --navbar-height: 72px;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&display=swap');
 
 /* ======= RESETEO GENERAL ======= */
 .app-layout {
-  min-height: 100vh;      // ocupa toda la pantalla
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; // en columna
+  flex-direction: column;
 }
 
 .app-main {
-  flex: 1;                // esto es lo clave: rellena el hueco
+  flex: 1;
 }
 
 * {
@@ -30,7 +30,7 @@ html, body {
 /* ======= ANIMACIÓN DE ENTRADA INICIAL ======= */
 body {
   margin: 0;
-  padding-top: 79px;
+  padding-top: var(--navbar-height);
   opacity: 0;
   transform: translateY(-20px);
   animation: dropIn 0.8s ease-out forwards;

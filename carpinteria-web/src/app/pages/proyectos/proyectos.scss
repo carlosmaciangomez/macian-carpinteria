@@ -1,11 +1,9 @@
 .proyectos-page {
-    min-height: fit-content;
-    margin-bottom: 50px;
-    /* mismo fondo base que servicios */
     background: #e5e7eb;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-height: 70vh;
 }
 
 /* header con estilo parecido al hero de servicios */
