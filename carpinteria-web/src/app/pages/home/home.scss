@@ -49,14 +49,11 @@
   background: #ffffff;
   padding: 80px 20px;
   text-align: center;
-  border-bottom: 2px solid #e7e1da;
-
   h2 {
     font-size: clamp(1.4rem, 5vw, 2rem);
     margin-bottom: 1rem;
     color: #3b2b24;
   }
-
   p {
     font-size: clamp(1rem, 4vw, 1.2rem);
     line-height: 1.6;
@@ -163,7 +160,7 @@
 .ubicacion {
   position: relative;
   width: 100%;
-  background: linear-gradient(180deg, #f2ede9 0%, #e7dfd8 100%);
+  //background: linear-gradient(180deg, #f2ede9 0%, #e7dfd8 100%);
   padding: 80px 20px;
   display: flex;
   flex-direction: column;
@@ -323,6 +320,10 @@
   /* El tercero (alt) ocupa toda la fila */
   .servicio.destacado.alt {
     width: 100%;
+  }
+
+  .padding-sections{
+    padding: 10px 7vw;
   }
 
   /* Ubicación en 2 columnas (texto + mapa) */
