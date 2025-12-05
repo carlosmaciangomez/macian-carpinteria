@@ -1,48 +1,72 @@
 <section class="contacto">
-    <div class="contacto-container">
-        <h2>Coméntanos cualquier duda o presupuesto</h2>
+    <div class="contacto-inner">
 
-        <form id="mensajeForm" (submit)="sendEmail($event)" novalidate>
-            <div class="form-group">
-                <label for="nombreContacto">Nombre completo:</label>
-                <input type="text" id="nombreContacto" name="nombreContacto" placeholder="Ej: Fernando Martínez" />
-            </div>
+        <!-- BLOQUE DE TEXTO (izquierda en escritorio, arriba en móvil) -->
+        <div class="contacto-info">
+            <h1>¿En qué podemos ayudarte?</h1>
 
-            <div class="form-group">
-                <label for="correoContacto">Correo de contacto:</label>
-                <input type="email" id="correoContacto" name="correoContacto" placeholder="ejemplo@correo.com" />
-            </div>
+            <p class="contacto-info__subtitle">
+                Cuéntanos qué tipo de trabajo de carpintería necesitas: un mueble a medida,
+                una reforma o un proyecto completo para tu vivienda o negocio.
+            </p>
 
-            <div class="form-group">
-                <label for="asuntoMensaje">Asunto:</label>
-                <input type="text" id="asuntoMensaje" name="asuntoMensaje" placeholder="Asunto del mensaje" />
-            </div>
+            <ul class="contacto-info__highlights">
+                <li>✔ Presupuestos sin compromiso.</li>
+                <li>✔ Trato directo con nuestra carpintería, sin intermediarios.</li>
+                <li>✔ Puedes explicarnos medidas aproximadas o adjuntar una breve descripción.</li>
+            </ul>
 
-            <div class="form-group">
-                <label for="textoMensaje">Descripción del mensaje:</label>
-                <textarea id="textoMensaje" name="textoMensaje" rows="5"
-                    placeholder="Escribe aquí tu mensaje..."></textarea>
-            </div>
+            <p class="contacto-info__note">
+                También puedes contactar con nosotros por teléfono o WhatsApp si lo prefieres.
+            </p>
+        </div>
 
+        <!-- FORMULARIO (derecha en escritorio, abajo en móvil) -->
+        <div class="contacto-container">
+            <h2>Coméntanos cualquier duda o presupuesto</h2>
 
-            <div id="recaptcha-container"></div>
+            <form id="mensajeForm" (submit)="sendEmail($event)" novalidate>
+                <div class="form-group">
+                    <label for="nombreContacto">Nombre completo:</label>
+                    <input type="text" id="nombreContacto" name="nombreContacto" placeholder="Ej: Fernando Martínez" />
+                </div>
 
-            <button type="submit" [disabled]="loading">
-                {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
-            </button>
+                <div class="form-group">
+                    <label for="correoContacto">Correo de contacto:</label>
+                    <input type="email" id="correoContacto" name="correoContacto" placeholder="ejemplo@correo.com" />
+                </div>
 
-            @if (fieldError) {
-            <p class="error">{{ fieldError }}</p>
-            }
-            @if (captchaError) {
-            <p class="error">⚠️ Por favor, marca la casilla "No soy un robot".</p>
-            }
-            @if (success) {
-            <p class="success">✅ Mensaje enviado correctamente.</p>
-            }
-            @if (error) {
-            <p class="error">❌ Error al enviar el mensaje. Inténtalo de nuevo.</p>
-            }
-        </form>
+                <div class="form-group">
+                    <label for="asuntoMensaje">Asunto:</label>
+                    <input type="text" id="asuntoMensaje" name="asuntoMensaje" placeholder="Asunto del mensaje" />
+                </div>
+
+                <div class="form-group">
+                    <label for="textoMensaje">Descripción del mensaje:</label>
+                    <textarea id="textoMensaje" name="textoMensaje" rows="5"
+                        placeholder="Escribe aquí tu mensaje..."></textarea>
+                </div>
+
+                <div id="recaptcha-container" class="g-recaptcha"></div>
+
+                <button type="submit" [disabled]="loading">
+                    {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
+                </button>
+
+                @if (fieldError) {
+                <p class="error">{{ fieldError }}</p>
+                }
+                @if (captchaError) {
+                <p class="error">⚠️ Por favor, marca la casilla "No soy un robot".</p>
+                }
+                @if (success) {
+                <p class="success">✅ Mensaje enviado correctamente.</p>
+                }
+                @if (error) {
+                <p class="error">❌ Error al enviar el mensaje. Inténtalo de nuevo.</p>
+                }
+            </form>
+        </div>
+
     </div>
 </section>
