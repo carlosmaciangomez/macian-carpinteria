@@ -15,10 +15,9 @@
 ================================ */
 
 .services__hero {
-    background: linear-gradient(180deg, #f9fafb, #e5e7eb);
+    background: linear-gradient(360deg, #f9fafb, #e5e7eb);
     color: #111827;
     padding: 3rem 1.5rem 2.5rem;
-    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .services__hero-inner {
@@ -48,7 +47,7 @@
 }
 
 /* ================================
-   ANTES / DESPUÉS
+    ANTES / DESPUÉS
 ================================ */
 
 .services__before-after {
@@ -74,27 +73,27 @@
     max-width: 640px;
 }
 
-/* --- Slider piscina --- */
+/* --- Slider --- */
 
-.piscina-slider {
+.slider {
     position: relative;
-    max-width: 800px;
-    /* antes: aspect-ratio: 16 / 9; */
+    width: 100%;
+    max-width: 1000px;
+    /* límite máximo real */
     aspect-ratio: 4 / 3;
-    margin-top: 1rem;
-    border-radius: 16px;
+    margin: 1rem auto 0;
     overflow: hidden;
     background: #000;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
 }
 
-.piscina-images {
+.slider-images {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.piscina-img {
+.slider-img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -104,8 +103,7 @@
     background: #000;
 }
 
-/* Slider transparente por encima */
-.piscina-range {
+.slider-range {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -114,8 +112,7 @@
     cursor: pointer;
 }
 
-/* Línea central */
-.piscina-line {
+.slider-line {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -125,8 +122,7 @@
     pointer-events: none;
 }
 
-/* Botón circular */
-.piscina-handle {
+.slider-handle {
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -143,8 +139,25 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+/* Pantallas medianas */
+@media (min-width: 768px) {
+    .slider {
+        aspect-ratio: 16 / 9;
+        min-height: 320px;
+    }
+}
+
+/* Pantallas grandes (≥1000px) */
+@media (min-width: 1000px) {
+    .slider {
+        min-height: 420px;
+        max-width: 1000px;
+    }
+}
+
+
 /* ================================
-   LISTA DE SERVICIOS
+    LISTA DE SERVICIOS
 ================================ */
 
 .services__list {
@@ -156,9 +169,12 @@
     gap: 2rem;
 }
 
+/* --- MOBILE FIRST: TEXTO ARRIBA, FOTO DEBAJO --- */
+
 .service-item {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    /* columna en móvil */
     background: #ffffff;
     border: 2px solid #111827;
     box-shadow: 0 18px 30px rgba(15, 23, 42, 0.35);
@@ -170,6 +186,7 @@
         box-shadow 180ms ease-out;
 }
 
+/* marquita superior */
 .service-item::before {
     content: '';
     position: absolute;
@@ -177,28 +194,32 @@
     left: 0;
     width: 32px;
     height: 4px;
-    background: #c17b4a;
+    background: #6c4d3e;
 }
 
+/* En móvil NO alternamos, todos igual */
 .service-item:nth-child(even) {
-    flex-direction: row-reverse;
+    flex-direction: column;
 }
 
-.service-item__media {
-    flex: 0 0 45%;
-    min-height: 220px;
-    background-size: cover;
-    background-position: center;
-    background-color: #d1d5db;
-    /* gris placeholder mientras no haya fotos */
-}
-
+/* Texto primero */
 .service-item__content {
-    flex: 1;
-    padding: 2rem 2.25rem;
+    order: 1;
+    padding: 1.75rem 1.5rem 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+/* Imagen debajo del texto, ocupando todo el ancho */
+.service-item__media {
+    order: 2;
+    width: 100%;
+    height: 220px;
+    /* alto fijo en móvil */
+    background-size: cover;
+    background-position: center;
+    background-color: #d1d5db;
 }
 
 .service-item__title {
@@ -213,11 +234,78 @@
     color: #4b5563;
 }
 
+/* Hover (se nota más en escritorio) */
 .service-item:hover {
     transform: translateY(-4px);
     box-shadow: 0 24px 40px rgba(15, 23, 42, 0.45);
 }
 
 .service-item:hover .service-item__title {
-    color: #c17b4a;
+    color: #6c4d3e;
+}
+
+/* ================================
+    TABLET + PC (≥ 768px)
+    TEXTO + FOTO EN HORIZONTAL
+================================ */
+
+@media (min-width: 768px) {
+    .service-item {
+        flex-direction: row;
+        /* horizontal */
+    }
+
+    .service-item__media {
+        order: 0;
+        flex: 0 0 45%;
+        min-height: 220px;
+    }
+
+    .service-item__content {
+        order: 0;
+        padding: 2rem 2.25rem;
+    }
+
+    /* Alternamos izquierda/derecha como antes */
+    .service-item:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+}
+
+.services__to-top {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem auto 0;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    border: 2px solid #9e7059;
+    background: #ffffff;
+    color: #111827;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.25);
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.services__to-top:hover,
+.services__to-top:focus-visible {
+    background-color: #6c4d3e;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+}
+
+
+@media (min-width: 768px) {
+    .services__to-top {
+        margin-top: 2rem;
+        font-size: 1rem;
+    }
 }

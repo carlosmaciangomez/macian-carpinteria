@@ -12,7 +12,7 @@ import { Title } from '@angular/platform-browser';
 export class ServiciosComponent {
   sliderPosition = 50;
 
-  constructor(private title: Title) {}
+  constructor(private title: Title) { }
 
   ngOnInit(): void {
     this.title.setTitle('Servicios');
@@ -21,5 +21,12 @@ export class ServiciosComponent {
   onSliderInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.sliderPosition = Number(input.value);
+  }
+  
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }

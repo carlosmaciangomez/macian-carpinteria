@@ -1,4 +1,4 @@
-<main class="services">
+<main class="services" id="services-top">
     <!-- HERO / CABECERA -->
     <section class="services__hero">
         <div class="services__hero-inner">
@@ -15,29 +15,28 @@
     <section class="services__before-after">
         <h2 class="services__before-after-title">Antes y después</h2>
         <p class="services__before-after-text">
-            Desliza la barra para ver el cambio entre el estado inicial y el resultado final del
-            proyecto.
+            Desliza para ver el antes y después de este proyecto
         </p>
 
-        <div class="piscina-slider">
-            <div class="piscina-images">
+        <div class="slider">
+            <div class="slider-images">
                 <!-- Ambas imágenes ocupan el 100%, sin deformarse -->
-                <img class="piscina-img piscina-img--before" src="assets/antesPiscina.jpg" alt="Antes piscina"
+                <img class="slider-img slider-img--before" src="assets/antesPiscina.jpg" alt="Antes piscina"
                     [style.clip-path]="'inset(0 ' + (100 - sliderPosition) + '% 0 0)'" />
 
-                <img class="piscina-img piscina-img--after" src="assets/despuesPiscina.jpg" alt="Después piscina"
+                <img class="slider-img slider-img--after" src="assets/despuesPiscina.jpg" alt="Después piscina"
                     [style.clip-path]="'inset(0 0 0 ' + sliderPosition + '%)'" />
             </div>
 
             <!-- Slider transparente por encima -->
             <input type="range" min="0" max="100" [value]="sliderPosition" (input)="onSliderInput($event)"
-                class="piscina-range" aria-label="Comparador antes/después" />
+                class="slider-range" aria-label="Comparador antes/después" />
 
             <!-- Línea central -->
-            <div class="piscina-line" [style.left.%]="sliderPosition" aria-hidden="true"></div>
+            <div class="slider-line" [style.left.%]="sliderPosition" aria-hidden="true"></div>
 
             <!-- Botón circular -->
-            <div class="piscina-handle" [style.left.%]="sliderPosition" aria-hidden="true">
+            <div class="slider-handle" [style.left.%]="sliderPosition" aria-hidden="true">
                 ↔
             </div>
         </div>
@@ -116,5 +115,9 @@
                 </p>
             </div>
         </article>
+
+        <button class="services__to-top" (click)="scrollToTop()">
+            Volver arriba
+        </button>
     </section>
 </main>
